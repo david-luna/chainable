@@ -1,0 +1,26 @@
+{
+  "name": "chainjs",
+  "version": "0.0.1",
+  "description": "Make something chainable",
+  "author": "David Luna",
+  "license": "MIT",
+  "scripts": {
+    "test": "karma start",
+    "build": "tsc"
+  },
+  "main": "./lib/index.js",
+  "files": [
+    "./lib/**/*!(.spec).js"
+  ],
+  "devDependencies": {
+    "@types/jasmine": "^2.8.8",
+    "jasmine-core": "^3.1.0",
+    "karma": "^2.0.4",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.2",
+    "karma-typescript": "^3.0.12",
+    "typescript": "^3.1.6"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,8 @@
+# system files
+.DS_Store
+
+# dependencies
+/node_modules/
+
+# coverage results
+/coverage/
