@@ -67,10 +67,10 @@ describe('chain', () => {
     it('should work with localStorage', done => {
       // Prepare
       let data: {[attr: string]: string} = {
-        key1: 'value1',
-        key2: 'value2',
-        key3: 'value3',
-        key4: 'value4',
+        localkey1: 'value1',
+        localkey2: 'value2',
+        localkey3: 'value3',
+        localkey4: 'value4',
       };
 
       // Execute
@@ -89,10 +89,10 @@ describe('chain', () => {
     it('should work with sessionStorage', done => {
       // Prepare
       let data: {[attr: string]: string} = {
-        key1: 'value1',
-        key2: 'value2',
-        key3: 'value3',
-        key4: 'value4',
+        sessionkey1: 'value1',
+        sessionkey2: 'value2',
+        sessionkey3: 'value3',
+        sessionkey4: 'value4',
       };
 
       // Execute
@@ -103,7 +103,7 @@ describe('chain', () => {
 
       // Expect
       for ( let a in data ) {
-        expect(localStorage.getItem(a)).toBe(data[a]);
+        expect(sessionStorage.getItem(a)).toBe(data[a]);
       }
       done();
     });
