@@ -6,3 +6,6 @@
 
 # coverage results
 /coverage/
+
+# lib generation
+/lib/
