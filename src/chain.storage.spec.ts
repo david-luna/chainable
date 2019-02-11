@@ -1,4 +1,4 @@
-import { chain, Chain } from './chain';
+import { chain, Chainable } from './chain';
 
 
 describe('chain with Sync Storage (local & session)', () => {
@@ -6,13 +6,14 @@ describe('chain with Sync Storage (local & session)', () => {
   describe('Local Storage', () => {
 
     // Prepare
-    let storage: Chain<Storage> = chain(localStorage);
+    let storage: Chainable<Storage> = chain(localStorage);
     let data: {[attr: string]: string} = {
       localkey1: 'value1',
       localkey2: 'value2',
       localkey3: 'value3',
       localkey4: 'value4',
     };
+
 
     it('should work with setItem', done => {
       // Execute
@@ -44,7 +45,7 @@ describe('chain with Sync Storage (local & session)', () => {
 
   describe('Session Storage', () => {
     // Prepare
-    let storage: Chain<Storage> = chain(sessionStorage);
+    let storage: Chainable<Storage> = chain(sessionStorage);
     let data: {[attr: string]: string} = {
       sessionkey1: 'value1',
       sessionkey2: 'value2',

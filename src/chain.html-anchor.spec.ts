@@ -1,4 +1,4 @@
-import { chain, Chain } from './chain';
+import { chain, Chainable } from './chain';
 
 interface ValueExpected {
   value  : any;
@@ -13,7 +13,7 @@ describe('chain with HTML Anchor element', () => {
 
   // The elemento to 
   let elem   : HTMLAnchorElement;
-  let chained: Chain<HTMLElement>;
+  let chained: Chainable<HTMLElement>;
 
   beforeEach(() => {
     elem    = document.createElement('a');
@@ -34,7 +34,7 @@ describe('chain with HTML Anchor element', () => {
     };
 
     // Execute (use the chain to assign properties)
-    let result: Chain<HTMLElement> = Object.keys(attrs).reduce((prev: Chain<HTMLElement>, key: string) => {
+    let result: Chainable<HTMLElement> = Object.keys(attrs).reduce((prev: Chainable<HTMLElement>, key: string) => {
       return prev[key](attrs[key].value);
     }, chained);
 

@@ -1,4 +1,4 @@
-import { chain, Chain } from './chain';
+import { chain, Chainable } from './chain';
 
 interface ValueExpected {
   value  : any;
@@ -13,7 +13,7 @@ describe('chain with HTML element', () => {
 
   // The elemento to 
   let elem   : HTMLDivElement;
-  let chained: Chain<HTMLElement>;
+  let chained: Chainable<HTMLDivElement>;
 
   beforeEach(() => {
     elem    = document.createElement('div');
@@ -44,7 +44,7 @@ describe('chain with HTML element', () => {
     };
 
     // Execute (use the chain to assign properties)
-    let result: Chain<HTMLElement> = Object.keys(attrs).reduce((prev: Chain<HTMLElement>, key: string) => {
+    let result: Chainable<HTMLElement> = Object.keys(attrs).reduce((prev: Chainable<HTMLElement>, key: string) => {
       return prev[key](attrs[key].value);
     }, chained);
 
@@ -56,51 +56,4 @@ describe('chain with HTML element', () => {
     done();
   });
 
-  xdescribe('Storage APIs', () => {
-
-    it('should work with localStorage', done => {
-      // Prepare
-      let data: {[attr: string]: string} = {
-        localkey1: 'value1',
-        localkey2: 'value2',
-        localkey3: 'value3',
-        localkey4: 'value4',
-      };
-
-      // Execute
-      let result: Chain<Storage> = chain(localStorage);
-      for ( let a in data ) {
-        result = result.setItem(a, data[a]);
-      }
-
-      // Expect
-      for ( let a in data ) {
-        expect(localStorage.getItem(a)).toBe(data[a]);
-      }
-      done();
-    });
-
-    it('should work with sessionStorage', done => {
-      // Prepare
-      let data: {[attr: string]: string} = {
-        sessionkey1: 'value1',
-        sessionkey2: 'value2',
-        sessionkey3: 'value3',
-        sessionkey4: 'value4',
-      };
-
-      // Execute
-      let result: Chain<Storage> = chain(sessionStorage);
-      for ( let a in data ) {
-        result = result.setItem(a, data[a]);
-      }
-
-      // Expect
-      for ( let a in data ) {
-        expect(sessionStorage.getItem(a)).toBe(data[a]);
-      }
-      done();
-    });
-
-  });
 });

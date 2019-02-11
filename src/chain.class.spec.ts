@@ -1,20 +1,32 @@
-import { chain, Chain } from './chain';
-
+import { chain, Chainable } from './chain';
 
 class ParentClass {
+  // Static props
+  static  staticStringProp : string;
+  static  staticNumberProp : number;
+  static  staticBooleanProp: boolean;
   // Public props
-  public  pubStringProp : string;
-  public  pubNumberProp : number;
-  public  pubBooleanProp: boolean;
+  public pubStringProp : string = '';
+  public pubNumberProp : number = 0;
+  public pubBooleanProp: boolean = false;
   // Private props
   private priStringProp : string;
   private priNumberProp : number;
   private priBooleanProp: boolean;
-  // Setters
+  // Get & Set
+  private _prop : any;
+  public get prop() : any {
+    return this._prop;
+  }
+  public set prop(v : any) {
+    this._prop = v;
+  }
+  
+  // Setter Methods
   public stringSetter  ( val: string ): void { this.priStringProp = val }
   public numberSetter  ( val: number ): void { this.priNumberProp = val }
   public booleanSetter ( val: boolean): void { this.priBooleanProp = val }
-  // Getters
+  // Getter Methods
   public stringGetter  ( ): string  { return this.priStringProp }
   public numberGetter  ( ): number  { return this.priNumberProp }
   public booleanGetter ( ): boolean { return this.priBooleanProp }
@@ -33,93 +45,116 @@ describe('chain with classes and inheritance', () => {
 
   let parent: ParentClass;
   let child : ChildClass;
+  let chainedParent: Chainable<ParentClass>;
+  let chainedChild : Chainable<ChildClass>;
 
   beforeEach(() => {
     parent = new ParentClass();
     child  = new ChildClass();
+    chainedParent = chain<ParentClass>(parent);
+    chainedChild  = chain<ChildClass>(child);
   });
   afterEach(() => {
     parent = null;
     child  = null;
+    chainedParent = null;
+    chainedChild  = null;
   });
 
 
   describe('instance of a class', () => {
 
-    // Prepare
-    
-    let storage: Chain<Storage> = chain(localStorage);
-    let data: {[attr: string]: string} = {
-      localkey1: 'value1',
-      localkey2: 'value2',
-      localkey3: 'value3',
-      localkey4: 'value4',
-    };
-
-    it('should work with setItem', done => {
+    it('should work with public attributes already set', done => {
       // Execute
-      for ( let a in data ) {
-        storage = storage.setItem(a, data[a]);
-      }
+      chainedParent
+      .pubBooleanProp(true)
+      .pubNumberProp(1)
+      .pubStringProp('test');
 
       // Expect
-      for ( let a in data ) {
-        expect(localStorage.getItem(a)).toBe(data[a]);
-      }
+      expect(parent.pubBooleanProp).toEqual(true);
+      expect(parent.pubNumberProp).toEqual(1);
+      expect(parent.pubStringProp).toEqual('test');
       done();
     });
 
-    it('should work with removeItem', done => {
+    it('should work with get/set accessors', done => {
       // Execute
-      for ( let a in data ) {
-        storage = storage.removeItem(a);
-      }
+      chainedParent
+      .prop('test')
 
       // Expect
-      for ( let a in data ) {
-        expect(localStorage.getItem(a)).toEqual(null);
-      }
-      expect(localStorage.length).toEqual(0);
+      expect(parent.prop).toEqual('test');
+      done();
+    });
+    
+    it('should noty work with static attributes', done => {
+      // Execute
+
+      // Expect
+      expect((<any>chainedParent).staticStringProp).not.toBeDefined();
+      expect((<any>chainedParent).staticNumberProp).not.toBeDefined();
+      expect((<any>chainedParent).staticStringProp).not.toBeDefined();
+      done();
+    });
+
+    it('should noty work with private attributes', done => {
+      // Execute
+
+      // Expect
+      expect((<any>chainedParent).priBooleanProp).not.toBeDefined();
+      expect((<any>chainedParent).priNumberProp).not.toBeDefined();
+      expect((<any>chainedParent).priStringProp).not.toBeDefined();
       done();
     });
   });
 
-  describe('Session Storage', () => {
-    // Prepare
-    let storage: Chain<Storage> = chain(sessionStorage);
-    let data: {[attr: string]: string} = {
-      sessionkey1: 'value1',
-      sessionkey2: 'value2',
-      sessionkey3: 'value3',
-      sessionkey4: 'value4',
-    };
+  describe('instance of a class with inheritance', () => {
+
+    it('should work with public attributes already set', done => {
+      // Execute
+      chainedChild
+      .pubBooleanProp(true)
+      .pubNumberProp(1)
+      .pubStringProp('test');
+
+      // Expect
+      expect(child.pubBooleanProp).toEqual(true);
+      expect(child.pubNumberProp).toEqual(1);
+      expect(child.pubStringProp).toEqual('test');
+      done();
+    });
+
+    it('should work with get/set accessors', done => {
+      // Execute
+      chainedChild
+      .prop('test')
+
+      // Expect
+      expect(child.prop).toEqual('test');
+      done();
+    });
     
-    it('should work with setItem', done => {
+    it('should noty work with static attributes', done => {
       // Execute
-      for ( let a in data ) {
-        storage = storage.setItem(a, data[a]);
-      }
 
       // Expect
-      for ( let a in data ) {
-        expect(sessionStorage.getItem(a)).toBe(data[a]);
-      }
+      expect((<any>chainedChild).staticStringProp).not.toBeDefined();
+      expect((<any>chainedChild).staticNumberProp).not.toBeDefined();
+      expect((<any>chainedChild).staticStringProp).not.toBeDefined();
       done();
     });
 
-    it('should work with removeItem', done => {
+    it('should noty work with private attributes', done => {
       // Execute
-      for ( let a in data ) {
-        storage = storage.removeItem(a, data[a]);
-      }
 
       // Expect
-      for ( let a in data ) {
-        expect(sessionStorage.getItem(a)).toEqual(null);
-      }
-      expect(sessionStorage.length).toEqual(0);
+      expect((<any>chainedChild).priBooleanProp).not.toBeDefined();
+      expect((<any>chainedChild).priNumberProp).not.toBeDefined();
+      expect((<any>chainedChild).priStringProp).not.toBeDefined();
       done();
     });
-
   });
+
+  
 });

@@ -1,4 +1,4 @@
-import { chain, Chain } from './chain';
+import { chain, Chainable } from './chain';
 
 describe('chain', () => {
 
@@ -22,7 +22,7 @@ describe('chain', () => {
       };
 
       // Execute
-      let result: Chain<HTMLElement> = chain(elem);
+      let result: Chainable<HTMLElement> = chain(elem);
       for ( let a in data ) {
         result = result.setAttribute(a, data[a]);
       }
@@ -48,7 +48,7 @@ describe('chain', () => {
       };
   
       // Execute
-      let result: Chain<HTMLElement> = chain(elem);
+      let result: Chainable<HTMLElement> = chain(elem);
       for ( let a in data ) {
         result = result[a](data[a]);
       }
@@ -74,7 +74,7 @@ describe('chain', () => {
       };
 
       // Execute
-      let result: Chain<Storage> = chain(localStorage);
+      let result: Chainable<Storage> = chain(localStorage);
       for ( let a in data ) {
         result = result.setItem(a, data[a]);
       }
@@ -96,7 +96,7 @@ describe('chain', () => {
       };
 
       // Execute
-      let result: Chain<Storage> = chain(sessionStorage);
+      let result: Chainable<Storage> = chain(sessionStorage);
       for ( let a in data ) {
         result = result.setItem(a, data[a]);
       }
