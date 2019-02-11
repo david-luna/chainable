@@ -11,8 +11,8 @@ type Chain<T> = {
 
 
 type ChainRef<T> = {
-  __ref__   : T;
-  __values__: any[];
+  __ref__ : T;
+  __vals__: any[];
 }
 
 /**
@@ -22,7 +22,10 @@ type ChainRef<T> = {
  */
 export type Chainable<T> = Chain<T> & ChainRef<T>;
 
-
+enum ChainableKeys {
+  __ref__  = '__ref__',
+  __vals__ = '__vals__',
+}
 
 
 /**
@@ -50,6 +53,18 @@ export function chain<T>( source: T ): Chainable<T> {
   // 2nd attempt use Proxy to also allow to work unsetted props
   const proxy: ProxyConstructor = new Proxy(<any>source, {
     get: function ( target: Object, propKey: string ) {
+      // initialize values array
+      this[ChainableKeys.__vals__] = this[ChainableKeys.__vals__] || [];
+
+      // Return reference if requested
+      if ( propKey === ChainableKeys.__ref__ ) {
+        return target;
+      }
+      // Return values if requested
+      if ( propKey === ChainableKeys.__vals__ ) {
+        return this[ChainableKeys.__vals__];
+      }
+
       // Bypass function call if exists
       if ( typeof target[propKey] === 'function' ) {
         return function (...args: any[]) {
@@ -60,7 +75,12 @@ export function chain<T>( source: T ): Chainable<T> {
 
       // Default accessor function by default
       return function ( val: any ) {
-        target[propKey] = val || target[propKey];
+        // Set the value if passed and push to array if no value (indicating a getter)
+        if ( !!val ) {
+          target[propKey] = val
+        } else {
+          this[ChainableKeys.__vals__].push(target[propKey]);
+        }
         return proxy;
       }
     }
