@@ -9,7 +9,7 @@ interface ValueExpectedMap {
 }
 
 
-describe('chain with HTML element', () => {
+describe('chain with HTML div element', () => {
 
   // The elemento to 
   let elem   : HTMLDivElement;
@@ -42,16 +42,20 @@ describe('chain with HTML element', () => {
       tabIndex       : { value: '1', expect: 1 },
       title          : { value: 'elem-title' },
     };
+    const keys: string[] = Object.keys(attrs);
 
     // Execute (use the chain to assign properties)
-    let result: Chainable<HTMLElement> = Object.keys(attrs).reduce((prev: Chainable<HTMLElement>, key: string) => {
-      return prev[key](attrs[key].value);
+    let result: Chainable<HTMLElement> = keys.reduce((prev: Chainable<HTMLElement>, key: string) => {
+      return prev[key](attrs[key].value) && prev[key]();
     }, chained);
 
     // Expect
     expect(result).toBe(chained);
-    Object.keys(attrs).forEach((key: string) => {
+    keys.forEach(( key: string, index: number ) => {
+      // The actual element has the value
       expect(elem[key]).toEqual(attrs[key].expect || attrs[key].value);
+      // The value is also in the list of __values__
+      expect(chained.__vals__[index]).toEqual(attrs[key].expect || attrs[key].value);
     });
     done();
   });
