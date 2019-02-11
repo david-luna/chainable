@@ -3,24 +3,26 @@
  * as method which return the same type
  * Making it chainable (yay!!)
  */
-export type Chain<T> = {
+type Chain<T> = {
   // TODO: check if there is a way to keep method signature
   // instead of having an array of arguments
-  [P in keyof T]?: (...args: any[]) => Chain<T>;
+  [P in keyof T]?: (...args: any[]) => Chainable<T>;
 };
 
 
-// type ChainRef<T> = {
-//   __ref__   : T;
-//   __values__: any[];
-// }
+type ChainRef<T> = {
+  __ref__   : T;
+  __values__: any[];
+}
 
-// /**
-//  * The chainable type add two more properties
-//  * __ref__: is the original reference of the object
-//  * __values__: is an array of the values returned for each chaned call
-//  */
-// export type Chainable<T> = Chain<T> & ChainRef<T>;
+/**
+ * The chainable type add two more properties
+ * __ref__: is the original reference of the object
+ * __values__: is an array of the values returned for each chaned call
+ */
+export type Chainable<T> = Chain<T> & ChainRef<T>;
+
+
 
 
 /**
@@ -44,27 +46,51 @@ function getProperties ( source: Object ): string[] {
  *   2. __values__ are all values returned by the calls in the chain (to get valeus if you need them)
  * @param source the object to make chainable
  */
-export function chain<T>( source: T ): Chain<T> {
-  // Get the list of methods 
-  const props: string[] = getProperties(source);
+export function chain<T>( source: T ): Chainable<T> {
+  // 2nd attempt use Proxy to also allow to work unsetted props
+  const proxy: ProxyConstructor = new Proxy(<any>source, {
+    get: function ( target: Object, propKey: string ) {
+      // Bypass function call if exists
+      if ( typeof target[propKey] === 'function' ) {
+        return function (...args: any[]) {
+          target[propKey].apply(target, args);
+          return proxy;
+        }
+      }
 
-  // Reduce properties aggregagin methods
-  return props.reduce((prev: Object, p: string) => {
-    // Decide what to do if function or property
-    if ( typeof source[p] === 'function' ) {
-      prev[p] = function (...args) {
-        // Call the original function with the proper scope and return same object
-        source[p].apply(source, args);
-        return prev;
-      };
-    } else {
-      // Override value properties with a setter/getter function
-      prev[p] = function (val) {
-        source[p] = val || source[p];
-        return prev;
-      };
+      // Default accessor function by default
+      return function ( val: any ) {
+        target[propKey] = val || target[propKey];
+        return proxy;
+      }
     }
-    return prev;
-  }, {});
+  });
 
+  return proxy as any;
 }
+
+
+// export function chain<T>( source: T ): Chain<T> {
+//   // Get the list of methods 
+//   const props: string[] = getProperties(source);
+
+//   // Reduce properties aggregagin methods
+//   return props.reduce((prev: Object, p: string) => {
+//     // Decide what to do if function or property
+//     if ( typeof source[p] === 'function' ) {
+//       prev[p] = function (...args) {
+//         // Call the original function with the proper scope and return same object
+//         source[p].apply(source, args);
+//         return prev;
+//       };
+//     } else {
+//       // Override value properties with a setter/getter function
+//       prev[p] = function (val) {
+//         source[p] = val || source[p];
+//         return prev;
+//       };
+//     }
+//     return prev;
+//   }, {});
+
+// }
