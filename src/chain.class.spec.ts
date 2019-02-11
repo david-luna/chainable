@@ -2,9 +2,9 @@ import { chain, Chainable } from './chain';
 
 class ParentClass {
   // Static props
-  static  staticStringProp : string;
-  static  staticNumberProp : number;
-  static  staticBooleanProp: boolean;
+  static staticStringProp : string;
+  static staticNumberProp : number;
+  static staticBooleanProp: boolean;
   // Public props
   public pubStringProp : string = '';
   public pubNumberProp : number = 0;
@@ -38,6 +38,23 @@ class ParentClass {
 }
 
 class ChildClass extends ParentClass {
+  // Public props
+  public childPubStringProp : string = '';
+  public childPubNumberProp : number = 0;
+  public childPubBooleanProp: boolean = false;
+  // Get & Set
+  private _childProp : any;
+  public get childProp() : any {
+    return this._childProp;
+  }
+  public set childProp(v : any) {
+    this._childProp = v;
+  }
+  // Other methods
+  public childStringMethod  ( param1: any ): string  { return ``;   }
+  public childNumberMethod  ( param1: any ): number  { return 0;    }
+  public childBooleanMethod ( param1: any ): boolean { return true; }
+  public childArrayMethod   ( param1: any ): any[]   { return [];   }
 
 }
 
@@ -75,6 +92,7 @@ describe('chain with classes and inheritance', () => {
       expect(parent.pubBooleanProp).toEqual(true);
       expect(parent.pubNumberProp).toEqual(1);
       expect(parent.pubStringProp).toEqual('test');
+      expect(chainedParent.__ref__).toBe(parent);
       done();
     });
 
@@ -85,28 +103,43 @@ describe('chain with classes and inheritance', () => {
 
       // Expect
       expect(parent.prop).toEqual('test');
+      expect(chainedParent.__ref__).toBe(parent);
       done();
     });
     
-    it('should noty work with static attributes', done => {
+    it('should allow custom properties out of the type with "any" cast', done => {
       // Execute
 
       // Expect
-      expect((<any>chainedParent).staticStringProp).not.toBeDefined();
-      expect((<any>chainedParent).staticNumberProp).not.toBeDefined();
-      expect((<any>chainedParent).staticStringProp).not.toBeDefined();
+      // This is the only way to bypass the linter
+      // otherwise it complain as it must do
+      // Static props in the instance
+      expect((<any>chainedParent).staticStringProp).toBeDefined();
+      expect((<any>chainedParent).staticNumberProp).toBeDefined();
+      expect((<any>chainedParent).staticStringProp).toBeDefined();
+      // Private props made public
+      expect((<any>chainedParent).priBooleanProp).toBeDefined();
+      expect((<any>chainedParent).priNumberProp).toBeDefined();
+      expect((<any>chainedParent).priStringProp).toBeDefined();
+      // Custom propoerties
+      expect((<any>chainedParent).unknownProp).toBeDefined();
       done();
     });
 
-    it('should noty work with private attributes', done => {
+    it('should work with public methods', done => {
       // Execute
 
       // Expect
-      expect((<any>chainedParent).priBooleanProp).not.toBeDefined();
-      expect((<any>chainedParent).priNumberProp).not.toBeDefined();
-      expect((<any>chainedParent).priStringProp).not.toBeDefined();
+      expect(() => {
+        chainedParent
+        .booleanMethod(true)
+        .numberMethod(1)
+        .stringMethod('test');
+      }).not.toThrow();
+      expect(chainedParent.__ref__).toBe(parent);
       done();
     });
+
   });
 
   describe('instance of a class with inheritance', () => {
@@ -116,12 +149,18 @@ describe('chain with classes and inheritance', () => {
       chainedChild
       .pubBooleanProp(true)
       .pubNumberProp(1)
-      .pubStringProp('test');
+      .pubStringProp('test')
+      .childPubBooleanProp(false)
+      .childPubNumberProp(2)
+      .childPubStringProp('child test')
 
       // Expect
       expect(child.pubBooleanProp).toEqual(true);
       expect(child.pubNumberProp).toEqual(1);
       expect(child.pubStringProp).toEqual('test');
+      expect(child.childPubBooleanProp).toEqual(false);
+      expect(child.childPubNumberProp).toEqual(2);
+      expect(child.childPubStringProp).toEqual('child test');
       done();
     });
 
@@ -129,31 +168,31 @@ describe('chain with classes and inheritance', () => {
       // Execute
       chainedChild
       .prop('test')
+      .childProp('child test')
 
       // Expect
       expect(child.prop).toEqual('test');
+      expect(child.childProp).toEqual('child test');
+      done();
+    });
+
+    it('should work with public methods', done => {
+      // Execute
+
+      // Expect
+      expect(() => {
+        chainedChild
+        .booleanMethod(true)
+        .numberMethod(1)
+        .stringMethod('test')
+        .childBooleanMethod(true)
+        .childNumberMethod(1)
+        .childStringMethod('test')
+      }).not.toThrow();
+      expect(chainedChild.__ref__).toBe(child);
       done();
     });
     
-    it('should noty work with static attributes', done => {
-      // Execute
-
-      // Expect
-      expect((<any>chainedChild).staticStringProp).not.toBeDefined();
-      expect((<any>chainedChild).staticNumberProp).not.toBeDefined();
-      expect((<any>chainedChild).staticStringProp).not.toBeDefined();
-      done();
-    });
-
-    it('should noty work with private attributes', done => {
-      // Execute
-
-      // Expect
-      expect((<any>chainedChild).priBooleanProp).not.toBeDefined();
-      expect((<any>chainedChild).priNumberProp).not.toBeDefined();
-      expect((<any>chainedChild).priStringProp).not.toBeDefined();
-      done();
-    });
   });
 
   
