@@ -6,25 +6,35 @@
 type Chain<T> = {
   // TODO: check if there is a way to keep method signature
   // instead of having an array of arguments
-  [P in keyof T]?: (...args: any[]) => Chainable<T>;
+  [P in keyof T]?:  T[P] extends string    ? (val: string)    => Chainable<T> :
+                    T[P] extends number    ? (val: number)    => Chainable<T> :
+                    T[P] extends boolean   ? (val: boolean)   => Chainable<T> :
+                    T[P] extends string[]  ? (val: string[])  => Chainable<T> :
+                    T[P] extends number[]  ? (val: number[])  => Chainable<T> :
+                    T[P] extends boolean[] ? (val: boolean[]) => Chainable<T> :
+                    // The default is a function
+                    // TODO: resolve the types of arguments
+                    (...args: any[]) => Chainable<T>;
 };
 
-
+/**
+ * This type is to add extra properties for our accessor methods
+ * `_getChainReference` is a method which returns the original object
+ * `_getChainValueAt` method which returns the result of the nth call
+ */
 type ChainRef<T> = {
-  __ref__ : T;
-  __vals__: any[];
+  _getChainReference: () => T;
+  _getChainValueAt: (i: number) => any;
 }
 
 /**
- * The chainable type add two more properties
- * __ref__: is the original reference of the object
- * __values__: is an array of the values returned for each chaned call
+ * The chainable type is a union of the two above
  */
 export type Chainable<T> = Chain<T> & ChainRef<T>;
 
 enum ChainableKeys {
-  __ref__  = '__ref__',
-  __vals__ = '__vals__',
+  _getChainReference = '_getChainReference',
+  _getChainValueAt   = '_getChainValueAt',
 }
 
 
@@ -32,7 +42,7 @@ enum ChainableKeys {
  * Retunrs the list of enumerable and non enumeravble propertires up to the prototype chain
  * @param source the object to get properties from
  */
-function getProperties ( source: Object ): string[] {
+const getProperties = ( source: Object ): string[] => {
   // At the end we get no object
   if ( !source ) return [];
 
@@ -45,41 +55,46 @@ function getProperties ( source: Object ): string[] {
  * Returns an chainable object with the same API and properites like the source with 2 differences
  * - properties become a getter/setter method depending if they have parameter
  * - we get 2 extra properties
- *   1. __ref__ is a reference to the original object
- *   2. __values__ are all values returned by the calls in the chain (to get valeus if you need them)
+ *   1. `_getChainReference` is a method which returns the original object
+ *   2. `_getChainValueAt` method which returns the result of the nth call
  * @param source the object to make chainable
  */
 export function chain<T>( source: T ): Chainable<T> {
-  // 2nd attempt use Proxy to also allow to work unsetted props
+  // initialize values array & props
+  const props: string[] = getProperties(source);
+  let values : any[]    = [];
+  // Use Proxy to also allow to work also with unsetted props
   const proxy: ProxyConstructor = new Proxy(<any>source, {
     get: function ( target: Object, propKey: string ) {
-      // initialize values array
-      this[ChainableKeys.__vals__] = this[ChainableKeys.__vals__] || [];
-
+      
       // Return reference if requested
-      if ( propKey === ChainableKeys.__ref__ ) {
-        return target;
+      if ( propKey === ChainableKeys._getChainReference ) {
+        return () => target;
       }
       // Return values if requested
-      if ( propKey === ChainableKeys.__vals__ ) {
-        return this[ChainableKeys.__vals__];
+      if ( propKey === ChainableKeys._getChainValueAt ) {
+        return (index: number) => values[index];
+      }
+
+      // Warn of undetected property
+      if ( props.indexOf(propKey) === -1 ) {
+        console.warn(`Chainable: the property ${propKey} is not available in the proto of source object`)
       }
 
       // Bypass function call if exists
       if ( typeof target[propKey] === 'function' ) {
         return function (...args: any[]) {
-          target[propKey].apply(target, args);
+          values.push(target[propKey].apply(target, args));
           return proxy;
         }
       }
 
       // Default accessor function by default
       return function ( val: any ) {
-        // Set the value if passed and push to array if no value (indicating a getter)
         if ( !!val ) {
-          target[propKey] = val
+          values.push(target[propKey] = val);
         } else {
-          this[ChainableKeys.__vals__].push(target[propKey]);
+          values.push(target[propKey]);
         }
         return proxy;
       }
@@ -88,29 +103,3 @@ export function chain<T>( source: T ): Chainable<T> {
 
   return proxy as any;
 }
-
-
-// export function chain<T>( source: T ): Chain<T> {
-//   // Get the list of methods 
-//   const props: string[] = getProperties(source);
-
-//   // Reduce properties aggregagin methods
-//   return props.reduce((prev: Object, p: string) => {
-//     // Decide what to do if function or property
-//     if ( typeof source[p] === 'function' ) {
-//       prev[p] = function (...args) {
-//         // Call the original function with the proper scope and return same object
-//         source[p].apply(source, args);
-//         return prev;
-//       };
-//     } else {
-//       // Override value properties with a setter/getter function
-//       prev[p] = function (val) {
-//         source[p] = val || source[p];
-//         return prev;
-//       };
-//     }
-//     return prev;
-//   }, {});
-
-// }
