@@ -46,7 +46,7 @@ describe('chain with HTML div element', () => {
 
     // Execute (use the chain to assign properties)
     let result: Chainable<HTMLElement> = keys.reduce((prev: Chainable<HTMLElement>, key: string) => {
-      return prev[key](attrs[key].value) && prev[key]();
+      return prev[key](attrs[key].value);
     }, chained);
 
     // Expect
@@ -55,7 +55,7 @@ describe('chain with HTML div element', () => {
       // The actual element has the value
       expect(elem[key]).toEqual(attrs[key].expect || attrs[key].value);
       // The value is also in the list of __values__
-      expect(chained.__vals__[index]).toEqual(attrs[key].expect || attrs[key].value);
+      expect(chained._getChainValueAt(index)).toEqual(attrs[key].value);
     });
     done();
   });

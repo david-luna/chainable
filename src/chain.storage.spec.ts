@@ -25,7 +25,7 @@ describe('chain with Sync Storage (local & session)', () => {
       for ( let a in data ) {
         expect(localStorage.getItem(a)).toBe(data[a]);
       }
-      expect(storage.__ref__).toBe(localStorage);
+      expect(storage._getChainReference()).toBe(localStorage);
       done();
     });
 
@@ -40,7 +40,7 @@ describe('chain with Sync Storage (local & session)', () => {
         expect(localStorage.getItem(a)).toEqual(null);
       }
       expect(localStorage.length).toEqual(0);
-      expect(storage.__ref__).toBe(localStorage);
+      expect(storage._getChainReference()).toBe(localStorage);
       done();
     });
   });
@@ -65,7 +65,7 @@ describe('chain with Sync Storage (local & session)', () => {
       for ( let a in data ) {
         expect(sessionStorage.getItem(a)).toBe(data[a]);
       }
-      expect(storage.__ref__).toBe(sessionStorage);
+      expect(storage._getChainReference()).toBe(sessionStorage);
       done();
     });
 
@@ -80,7 +80,7 @@ describe('chain with Sync Storage (local & session)', () => {
         expect(sessionStorage.getItem(a)).toEqual(null);
       }
       expect(sessionStorage.length).toEqual(0);
-      expect(storage.__ref__).toBe(sessionStorage);
+      expect(storage._getChainReference()).toBe(sessionStorage);
       done();
     });
 
