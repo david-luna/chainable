@@ -1,4 +1,4 @@
-import { chain, Chainable } from './chain';
+import { chainable, Chainable } from './chain';
 
 class ParentClass {
   // Static props
@@ -68,8 +68,8 @@ describe('chain with classes and inheritance', () => {
   beforeEach(() => {
     parent = new ParentClass();
     child  = new ChildClass();
-    chainedParent = chain<ParentClass>(parent);
-    chainedChild  = chain<ChildClass>(child);
+    chainedParent = chainable<ParentClass>(parent);
+    chainedChild  = chainable<ChildClass>(child);
   });
   afterEach(() => {
     parent = null;

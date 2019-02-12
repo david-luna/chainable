@@ -1,4 +1,4 @@
-import { chain, Chainable } from './chain';
+import { chainable, Chainable } from './chain';
 
 interface ValueExpected {
   value  : any;
@@ -17,7 +17,7 @@ describe('chain with HTML div element', () => {
 
   beforeEach(() => {
     elem    = document.createElement('div');
-    chained = chain(elem);
+    chained = chainable(elem);
   });
 
   afterEach(() => {

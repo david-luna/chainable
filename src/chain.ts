@@ -59,7 +59,7 @@ const getProperties = ( source: Object ): string[] => {
  *   2. `_getChainValueAt` method which returns the result of the nth call
  * @param source the object to make chainable
  */
-export function chain<T>( source: T ): Chainable<T> {
+export function chainable<T>( source: T ): Chainable<T> {
   // initialize values array & props
   const props: string[] = getProperties(source);
   let values : any[]    = [];
