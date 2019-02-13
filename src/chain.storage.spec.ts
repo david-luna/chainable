@@ -1,4 +1,4 @@
-import { chainable, Chainable } from './chain';
+import { chainable, Chainable } from './chainable';
 
 
 describe('chain with Sync Storage (local & session)', () => {

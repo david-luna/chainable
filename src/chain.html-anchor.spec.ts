@@ -1,4 +1,4 @@
-import { chainable, Chainable } from './chain';
+import { chainable, Chainable } from './chainable';
 
 interface ValueExpected {
   value  : any;

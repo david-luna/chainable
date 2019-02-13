@@ -1,1 +1,1 @@
-export { chainable, Chainable } from './chain';
+export { chainable, Chainable } from './chainable';

@@ -1,4 +1,4 @@
-import { chainable, Chainable } from './chain';
+import { chainable, Chainable } from './chainable';
 
 class ParentClass {
   // Static props
