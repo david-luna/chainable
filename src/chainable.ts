@@ -5,16 +5,9 @@
  */
 type Chain<T> = {
   // TODO: check if there is a way to keep method signature
-  // instead of having an array of arguments
-  [P in keyof T]?:  T[P] extends string    ? (val: string)    => Chainable<T> :
-                    T[P] extends number    ? (val: number)    => Chainable<T> :
-                    T[P] extends boolean   ? (val: boolean)   => Chainable<T> :
-                    T[P] extends string[]  ? (val: string[])  => Chainable<T> :
-                    T[P] extends number[]  ? (val: number[])  => Chainable<T> :
-                    T[P] extends boolean[] ? (val: boolean[]) => Chainable<T> :
-                    // The default is a function
-                    // TODO: resolve the types of arguments
-                    (...args: any[]) => Chainable<T>;
+  // instead of having an Array<any> of arguments
+  [P in keyof T]?:  T[P] extends Function ? (...args: any[]) => Chainable<T> :
+                    (val: T[P]) => Chainable<T>;
 };
 
 /**
