@@ -83,11 +83,11 @@ export function chainable<T>( source: T ): Chainable<T> {
       }
 
       // Default accessor function by default
-      return function ( val: any ) {
-        if ( !!val ) {
-          values.push(target[propKey] = val);
-        } else {
+      return function ( ...args: any[] ) {
+        if ( args.length === 0 ) {
           values.push(target[propKey]);
+        } else {
+          values.push(target[propKey] = args[0]);
         }
         return proxy;
       }
