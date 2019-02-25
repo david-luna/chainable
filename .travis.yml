@@ -3,7 +3,7 @@ node_js:
   - "stable"
 branches:
   only:
-    - master
+    - "^\d\.\d\.\d\$"
 jobs:
   include:
     - stage: test
@@ -12,7 +12,6 @@ jobs:
         - sh -e /etc/init.d/xvfb start
       script: npm test
     - stage: npm release
-      if: tag IS present
       script: npm run build
       deploy:
         provider: npm
