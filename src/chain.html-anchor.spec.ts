@@ -13,7 +13,7 @@ describe('chain with HTML Anchor element', () => {
 
   // The elemento to 
   let elem   : HTMLAnchorElement;
-  let chained: Chainable<HTMLElement>;
+  let chained: Chainable<HTMLAnchorElement>;
 
   beforeEach(() => {
     elem    = document.createElement('a');
@@ -37,6 +37,7 @@ describe('chain with HTML Anchor element', () => {
     let result: Chainable<HTMLElement> = Object.keys(attrs).reduce((prev: Chainable<HTMLElement>, key: string) => {
       return prev[key](attrs[key].value);
     }, chained);
+
 
     // Expect
     expect(result).toBe(chained);
