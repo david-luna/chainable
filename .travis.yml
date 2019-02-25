@@ -3,7 +3,8 @@ node_js:
   - "stable"
 branches:
   only:
-    - "^\d\.\d\.\d\$"
+    - master
+    - /^\d\.\d\.\d\$/
 jobs:
   include:
     - stage: test
