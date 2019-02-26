@@ -71,7 +71,7 @@ export function chainable<T>( source: T ): Chainable<T> {
 
       // Warn of undetected property
       if ( props.indexOf(propKey) === -1 ) {
-        console.warn(`Chainable: the property ${propKey} is not available in the proto of source object`)
+        // console.warn(`Chainable: the property ${propKey} is not available in the proto of source object`)
       }
 
       // Bypass function call if exists

@@ -16,7 +16,7 @@ module.exports = function(config) {
 
   // Change for CI
   if (process.env.TRAVIS) {
-    options.browsers = ['Firefox'];
+    options.browsers = ["Firefox", "Chrome"];
     options.singleRun = true;
   }
 
