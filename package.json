@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "test": "karma start",
-    "build": "tsc"
+    "build": "tsc",
+    "lcov": "cat coverage/lcov/lcov.info | coveralls"
   },
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
