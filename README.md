@@ -3,6 +3,7 @@
 A script function that allows you to make method chainig for any object/API
 
 [![Build Status](https://travis-ci.org/david-luna/chainable.svg?branch=master)](https://travis-ci.org/david-luna/chainable)
+[![Coverage Status](https://coveralls.io/repos/github/david-luna/chainable/badge.svg)](https://coveralls.io/github/david-luna/chainable)
 
 ## Install
 
@@ -14,7 +15,7 @@ npm install --save chainablejs
 
 ```javascript
 // Typescript
-import { chainable } from 'chainablets';
+import { chainable, Chainable } from 'chainablets';
 
 let elem   : HTMLAnchorElement;
 let chained: Chainable<HTMLAnchorElement>;

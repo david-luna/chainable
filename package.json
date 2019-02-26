@@ -5,8 +5,9 @@
   "author": "David Luna",
   "license": "MIT",
   "scripts": {
-    "test": "karma start",
+    "test": "npm run karma && npm run lcov",
     "build": "tsc",
+    "karma": "karma start",
     "lcov": "cat coverage/lcov/lcov.info | coveralls"
   },
   "main": "./lib/index.js",
