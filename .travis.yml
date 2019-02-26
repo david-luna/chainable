@@ -1,16 +1,20 @@
 language: node_js
 node_js:
   - "stable"
+cache: npm
+addons:
+  firefox: latest
+  chrome: "stable"
 branches:
   only:
     - master
-    - "^\d+\.\d+\.\d+\$"
 jobs:
   include:
     - stage: test
       before_script:
         - export DISPLAY=:99.0
         - sh -e /etc/init.d/xvfb start
+        - sleep 3
       script: npm test
     - stage: npm release
       script: npm run build
@@ -19,5 +23,3 @@ jobs:
         email: "$NPM_EMAIL"
         api_key: "$NPM_TOKEN"
         skip_cleanup: true
-        on:
-          tags: true

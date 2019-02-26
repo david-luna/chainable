@@ -8,7 +8,12 @@ module.exports = function(config) {
       "**/*.ts": ["karma-typescript"]
     },
     karmaTypescriptConfig: {
-      tsconfig: './tsconfig.json'
+      tsconfig: './tsconfig.json',
+      reports: {
+        "html": {
+          "directory": "coverage"
+        }
+      }
     },
     reporters: ["dots", "karma-typescript"],
     browsers: ["Firefox", "Chrome"]
@@ -16,8 +21,15 @@ module.exports = function(config) {
 
   // Change for CI
   if (process.env.TRAVIS) {
-    options.browsers = ['Firefox'];
+    options.browsers = ["Firefox", "Chrome"];
     options.singleRun = true;
+    options.karmaTypescriptConfig.reports = {
+      "lcovonly": {
+        "directory": "coverage",
+        "filename": "lcov.info",
+        "subdirectory": "lcov"
+      }
+    };
   }
 
   // Set the options
