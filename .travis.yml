@@ -10,15 +10,13 @@ branches:
     - master
 jobs:
   include:
-    - stage: test
+    - stage: test with Karma
       before_script:
         - export DISPLAY=:99.0
         - sh -e /etc/init.d/xvfb start
         - sleep 3
       script: npm test
-    - stage: coveralls
-      script: npm run lcov
-    - stage: npm release
+    - stage: release to npm
       script: npm run build
       deploy:
         provider: npm
