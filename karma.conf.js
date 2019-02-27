@@ -21,7 +21,7 @@ module.exports = function(config) {
 
   // Change for CI
   if (process.env.TRAVIS) {
-    options.browsers = ["Firefox", "Chrome"];
+    options.browsers = ["Firefox"];
     options.singleRun = true;
     options.karmaTypescriptConfig.reports = {
       "lcovonly": {
