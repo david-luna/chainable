@@ -51,6 +51,26 @@ describe('chain with interfaces', () => {
   describe('interface properties', () => {
 
     it('should resolve all interface types properly', done => {
+      // Prepare
+      raw = {
+        str   : undefined,
+        strArr: undefined,
+        strObj: undefined,
+        strMap: undefined,
+        strSet: undefined,
+        bol   : undefined,
+        bolArr: undefined,
+        bolObj: undefined,
+        bolMap: undefined,
+        bolSet: undefined,
+        num   : undefined,
+        numArr: undefined,
+        numObj: undefined,
+        numMap: undefined,
+        numSet: undefined,
+      };
+      chainedRaw = chainable<RawTypes>(raw);
+
       // Execute
       chainedRaw
       .str('one')
@@ -87,6 +107,12 @@ describe('chain with interfaces', () => {
         numMap: new Map([['0', 0],['1', 1],['2', 2]]),
         numSet: new Set([0,1,2]),
       });
+      done();
+    });
+
+    it('should resolve throw if some property is missing/not initialized', done => {
+      // Expect
+      expect(() => chainedRaw.str('one')).toThrowError(TypeError);
       done();
     });
   });
