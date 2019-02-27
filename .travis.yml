@@ -15,7 +15,9 @@ jobs:
         - export DISPLAY=:99.0
         - sh -e /etc/init.d/xvfb start
         - sleep 3
-      script: npm test
+      script:
+        - npm test
+        - npm run lcov
     - stage: release to npm
       script: npm run build
       deploy:
