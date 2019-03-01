@@ -45,6 +45,12 @@ const getProperties = ( source: Object ): string[] => {
 }
 
 /**
+ * Better typeof
+ * @param val the value to extract the type
+ */
+const typeOf = ( val: any ): string => ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+
+/**
  * Returns an chainable object with the same API and properites like the source with 2 differences
  * - properties become a getter/setter method depending if they have parameter
  * - we get 2 extra properties
@@ -54,15 +60,24 @@ const getProperties = ( source: Object ): string[] => {
  */
 export function chainable<T>( source: T ): Chainable<T> {
   // initialize values array & props
-  const props: string[] = getProperties(source);
-  let values : any[]    = [];
+  const props : string[] = getProperties(source);
+  const values: any[]    = [];
+  // This will help us to make sure we are proxying an object
+  const srcFactory = {
+    string  : (v) => new String(v),
+    number  : (v) => new Number(v),
+    boolean : (v) => new Boolean(v),
+    object  : (v) => v,
+    function: (v) => v,
+  };
   // Use Proxy to also allow to work also with unsetted props
-  const proxy: ProxyConstructor = new Proxy(<any>source, {
+  //const proxy: ProxyConstructor = new Proxy(<any>source, {
+  const proxy: ProxyConstructor = new Proxy(<any>srcFactory[typeof source](source), {
     get: function ( target: Object, propKey: string ) {
       
       // Return reference if requested
       if ( propKey === ChainableKeys._getChainReference ) {
-        return () => target;
+        return () => source;
       }
       // Return values if requested
       if ( propKey === ChainableKeys._getChainValueAt ) {
