@@ -7,7 +7,7 @@ type Chain<T> = {
   // TODO: check if there is a way to keep method signature
   // instead of having an Array<any> of arguments
   [P in keyof T]?:  T[P] extends Function ? (...args: any[]) => Chainable<T> :
-                    (val: T[P]) => Chainable<T>;
+                    (val?: T[P]) => Chainable<T>;
 };
 
 /**
@@ -46,9 +46,10 @@ const getProperties = ( source: Object ): string[] => {
 
 /**
  * Better typeof
+ * @deprecated
  * @param val the value to extract the type
  */
-const typeOf = ( val: any ): string => ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
+// const typeOf = ( val: any ): string => ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
 
 /**
  * Returns an chainable object with the same API and properites like the source with 2 differences
@@ -84,7 +85,8 @@ export function chainable<T>( source: T ): Chainable<T> {
         return (index: number) => values[index];
       }
 
-      // Warn of undetected property
+      // Throw if undetected property
+      // TODO: strict mode off?
       if ( props.indexOf(propKey) === -1 ) {
         throw new TypeError(`Chainable: the property ${propKey} is not available in the proto of source object`);
       }
