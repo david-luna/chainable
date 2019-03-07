@@ -132,6 +132,9 @@ describe('chain with js types', () => {
       .set('key3', 'val3')
       .size()
       .get('key1')
+      .delete('key1')
+      .has('key1')
+      .size()
       .keys()
       .values()
 
@@ -139,8 +142,39 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainReference()).toBe(rawValue);
       expect(chainedValue._getChainValueAt(3)).toEqual(3);
       expect(chainedValue._getChainValueAt(4)).toEqual('val1');
-      expect(chainedValue._getChainValueAt(5)).toEqual(rawValue.keys());
-      expect(chainedValue._getChainValueAt(6)).toEqual(rawValue.values());
+      expect(chainedValue._getChainValueAt(6)).toEqual(false);
+      expect(chainedValue._getChainValueAt(7)).toEqual(2);
+      expect(chainedValue._getChainValueAt(8)).toEqual(rawValue.keys());
+      expect(chainedValue._getChainValueAt(9)).toEqual(rawValue.values());
+      done();
+    });
+
+  });
+
+  describe('Set type', () => {
+
+    it('should resolve all interface types properly with the primitive', done => {
+      // Prepare
+      const rawValue     = new Set();
+      const chainedValue = chainable<Set<string>>(rawValue);
+
+      // Execute
+      chainedValue
+      .add('val1')
+      .add('val2')
+      .size()
+      .has('val1')
+      .delete('val1')
+      .has('val1')
+      .clear()
+      .size()
+
+      // Expect
+      expect(chainedValue._getChainReference()).toBe(rawValue);
+      expect(chainedValue._getChainValueAt(2)).toEqual(2);
+      expect(chainedValue._getChainValueAt(3)).toEqual(true);
+      expect(chainedValue._getChainValueAt(5)).toEqual(false);
+      expect(chainedValue._getChainValueAt(7)).toEqual(0);
       done();
     });
 
