@@ -6,13 +6,19 @@ class ParentClass {
   static staticNumberProp : number;
   static staticBooleanProp: boolean;
   // Public props
-  public pubStringProp : string = '';
-  public pubNumberProp : number = 0;
-  public pubBooleanProp: boolean = false;
+  public pubStringProp        : string;
+  public pubNumberProp        : number;
+  public pubBooleanProp       : boolean;
+  public pubStringPropWithVal : string = '';
+  public pubNumberPropWithVal : number = 0;
+  public pubBooleanPropWithVal: boolean = false;
   // Private props
-  private priStringProp : string;
-  private priNumberProp : number;
-  private priBooleanProp: boolean;
+  private priStringProp        : string;
+  private priNumberProp        : number;
+  private priBooleanProp       : boolean;
+  private priStringPropWithVal : string  = '';
+  private priNumberPropWithVal : number  = 0;
+  private priBooleanPropWithVal: boolean = false;
   // Get & Set
   private _prop : string;
   public get prop() : string {
@@ -84,14 +90,14 @@ describe('chain with classes and inheritance', () => {
     it('should work with public attributes already set', done => {
       // Execute
       chainedParent
-      .pubBooleanProp(true)
-      .pubNumberProp(1)
-      .pubStringProp('test');
+      .pubBooleanPropWithVal(true)
+      .pubNumberPropWithVal(1)
+      .pubStringPropWithVal('test');
 
       // Expect
-      expect(parent.pubBooleanProp).toEqual(true);
-      expect(parent.pubNumberProp).toEqual(1);
-      expect(parent.pubStringProp).toEqual('test');
+      expect(parent.pubBooleanPropWithVal).toEqual(true);
+      expect(parent.pubNumberPropWithVal).toEqual(1);
+      expect(parent.pubStringPropWithVal).toEqual('test');
       expect(chainedParent._getChainReference()).toBe(parent);
       done();
     });
@@ -106,6 +112,29 @@ describe('chain with classes and inheritance', () => {
       expect(chainedParent._getChainReference()).toBe(parent);
       done();
     });
+
+    it('should fail for static properties', done => {
+      // Execute
+
+      // Expect
+      expect(() => (<any>chainedParent).staticStringProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).staticNumberProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).staticStringProp).toThrowError(TypeError);
+      done();
+    });
+
+    it('should fail for private/public non initialised properties', done => {
+      // Execute
+
+      // Expect
+      expect(() => (<any>chainedParent).pubBooleanProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).pubNumberProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).pubStringProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).priBooleanProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).priNumberProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).priStringProp).toThrowError(TypeError);
+      done();
+    });
     
     it('should allow custom properties out of the type with "any" cast', done => {
       // Execute
@@ -114,15 +143,15 @@ describe('chain with classes and inheritance', () => {
       // This is the only way to bypass the linter
       // otherwise it complain as it must do
       // Static props in the instance
-      expect((<any>chainedParent).staticStringProp).toBeDefined();
-      expect((<any>chainedParent).staticNumberProp).toBeDefined();
-      expect((<any>chainedParent).staticStringProp).toBeDefined();
+      // expect((<any>chainedParent).staticStringProp).toBeDefined();
+      // expect((<any>chainedParent).staticNumberProp).toBeDefined();
+      // expect((<any>chainedParent).staticStringProp).toBeDefined();
       // Private props made public
-      expect((<any>chainedParent).priBooleanProp).toBeDefined();
-      expect((<any>chainedParent).priNumberProp).toBeDefined();
-      expect((<any>chainedParent).priStringProp).toBeDefined();
+      expect(() => (<any>chainedParent).priBooleanProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).priNumberProp).toThrowError(TypeError);
+      expect(() => (<any>chainedParent).priStringProp).toThrowError(TypeError);
       // Custom propoerties
-      expect((<any>chainedParent).unknownProp).toBeDefined();
+      expect(() => (<any>chainedParent).unknownProp).toThrowError(TypeError);
       done();
     });
 
@@ -147,17 +176,17 @@ describe('chain with classes and inheritance', () => {
     it('should work with public attributes already set', done => {
       // Execute
       chainedChild
-      .pubBooleanProp(true)
-      .pubNumberProp(1)
-      .pubStringProp('test')
+      .pubBooleanPropWithVal(true)
+      .pubNumberPropWithVal(1)
+      .pubStringPropWithVal('test')
       .childPubBooleanProp(false)
       .childPubNumberProp(2)
       .childPubStringProp('child test')
 
       // Expect
-      expect(child.pubBooleanProp).toEqual(true);
-      expect(child.pubNumberProp).toEqual(1);
-      expect(child.pubStringProp).toEqual('test');
+      expect(child.pubBooleanPropWithVal).toEqual(true);
+      expect(child.pubNumberPropWithVal).toEqual(1);
+      expect(child.pubStringPropWithVal).toEqual('test');
       expect(child.childPubBooleanProp).toEqual(false);
       expect(child.childPubNumberProp).toEqual(2);
       expect(child.childPubStringProp).toEqual('child test');
@@ -168,11 +197,11 @@ describe('chain with classes and inheritance', () => {
       // Execute
       chainedChild
       .prop('test')
-      //.childProp('child test')
+      .childProp('child test')
 
       // Expect
       expect(child.prop).toEqual('test');
-      //expect(child.childProp).toEqual('child test');
+      expect(child.childProp).toEqual('child test');
       done();
     });
 

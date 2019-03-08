@@ -16,7 +16,8 @@ module.exports = function(config) {
       }
     },
     reporters: ["dots", "karma-typescript"],
-    browsers: ["Firefox", "Chrome"]
+    // browsers: ["Firefox", "Chrome"]
+    browsers: ["Chrome"]
   };
 
   // Change for CI
