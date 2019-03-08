@@ -4,6 +4,14 @@
   "description": "Make something chainable",
   "author": "David Luna",
   "license": "MIT",
+  "homepage": "https://github.com/david-luna/chainable",
+  "bugs": {
+    "url": "https://github.com/david-luna/chainable/issues"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/david-luna/chainable.git"
+  },
   "scripts": {
     "build": "tsc",
     "test": "karma start",
