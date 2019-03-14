@@ -6,8 +6,8 @@ A script function that allows you to make method chainig for any object/API
 [![Issues](https://img.shields.io/github/issues/david-luna/chainable.svg)](https://github.com/david-luna/chainable/issues)
 [![Build Status](https://travis-ci.org/david-luna/chainable.svg?branch=master)](https://travis-ci.org/david-luna/chainable)
 [![Coverage Status](https://coveralls.io/repos/github/david-luna/chainable/badge.svg)](https://coveralls.io/github/david-luna/chainable)
-[![Code Size](https://img.shields.io/github/languages/code-size/david-luna/chainable.svg)]
-[![Weekly downloads](https://img.shields.io/npm/dw/chainablets.svg)]
+![Code Size](https://img.shields.io/github/languages/code-size/david-luna/chainable.svg)
+![Weekly downloads](https://img.shields.io/npm/dw/chainablets.svg)
 
 ## Install
 
