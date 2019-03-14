@@ -6,6 +6,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
+    "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./lib"
