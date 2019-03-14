@@ -1,6 +1,6 @@
 {
   "name": "chainablets",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Make something chainable",
   "author": "David Luna",
   "license": "MIT",
@@ -20,7 +20,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "./lib/**/*!(.spec).js"
+    "lib"
   ],
   "devDependencies": {
     "@types/jasmine": "^2.8.8",
