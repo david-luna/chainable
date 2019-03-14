@@ -1,13 +1,19 @@
 /**
+ * Shortand for typing any kind of function
+ */
+type AnyFunction = (...args: any[]) => any;
+
+/**
  * this type transforms other types by declaring all properties
  * as method which return the same type
  * Making it chainable (yay!!)
+ * We keep method signature by inferring the parameters using TS built-in types
+ * https://stackoverflow.com/questions/50773038/inferring-function-parameters-in-typescript
+ * (see second answer)
  */
-type Chain<T> = {
-  // TODO: check if there is a way to keep method signature
-  // instead of having an Array<any> of arguments
-  [P in keyof T]?:  T[P] extends Function ? (...args: any[]) => Chainable<T> :
-                    (val?: T[P]) => Chainable<T>;
+type Chain<T>    = {
+  [K in keyof T]?:  T[K] extends AnyFunction ? (...args: Parameters<T[K]>) => Chainable<T> :
+                    (val?: T[K]) => Chainable<T>;
 };
 
 /**
@@ -30,7 +36,6 @@ enum ChainableKeys {
   _getChainValueAt   = '_getChainValueAt',
 }
 
-
 /**
  * Retunrs the list of enumerable and non enumeravble propertires up to the prototype chain
  * @param source the object to get properties from
@@ -45,13 +50,6 @@ const getProperties = ( source: Object ): string[] => {
 }
 
 /**
- * Better typeof
- * @deprecated
- * @param val the value to extract the type
- */
-// const typeOf = ( val: any ): string => ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-
-/**
  * Returns an chainable object with the same API and properites like the source with 2 differences
  * - properties become a getter/setter method depending if they have parameter
  * - we get 2 extra properties
@@ -59,23 +57,14 @@ const getProperties = ( source: Object ): string[] => {
  *   2. `_getChainValueAt` method which returns the result of the nth call
  * @param source the object to make chainable
  */
-export function chainable<T>( source: T ): Chainable<T> {
+export function chainable<T extends object>( source: T ): Chainable<T> {
   // initialize values array & props
   const props : string[] = getProperties(source);
   const values: any[]    = [];
-  // This will help us to make sure we are proxying an object
-  const srcFactory = {
-    string  : (v) => new String(v),
-    number  : (v) => new Number(v),
-    boolean : (v) => new Boolean(v),
-    object  : (v) => v,
-    function: (v) => v,
-  };
+
   // Use Proxy to also allow to work also with unsetted props
-  //const proxy: ProxyConstructor = new Proxy(<any>source, {
-  const proxy: ProxyConstructor = new Proxy(<any>srcFactory[typeof source](source), {
+  const proxy = new Proxy(source, {
     get: function ( target: Object, propKey: string ) {
-      
       // Return reference if requested
       if ( propKey === ChainableKeys._getChainReference ) {
         return () => source;
@@ -111,5 +100,5 @@ export function chainable<T>( source: T ): Chainable<T> {
     }
   });
 
-  return proxy as any;
+  return proxy;
 }

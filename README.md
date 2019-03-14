@@ -2,8 +2,12 @@
 
 A script function that allows you to make method chainig for any object/API
 
+[![GitHub license](https://img.shields.io/npm/l/chainablets.svg)](https://github.com/david-luna/chainable/blob/master/README.md)
+[![Issues](https://img.shields.io/github/issues/david-luna/chainable.svg)](https://github.com/david-luna/chainable/issues)
 [![Build Status](https://travis-ci.org/david-luna/chainable.svg?branch=master)](https://travis-ci.org/david-luna/chainable)
 [![Coverage Status](https://coveralls.io/repos/github/david-luna/chainable/badge.svg)](https://coveralls.io/github/david-luna/chainable)
+[![Code Size](https://img.shields.io/github/languages/code-size/david-luna/chainable.svg)]
+[![Weekly downloads](https://img.shields.io/npm/dw/chainablets.svg)]
 
 ## Install
 
@@ -67,7 +71,38 @@ console.assert(chained._getChainValueAt(4) === elem.target);
 
 Not tested in node yet but it might work too :)
 
-## Known issues
+## Known issues & limitations
 
-- Bad type resolution for arrays: although it works at runtime the type definition is not clear enough for TS and does not resolve the type corrctly
-- Not working on functions: this lib was meant to work only with objects but it would be a nice to have
+- Does not work with primitives (boolean, string, number, symbol) or funcitons since is meant to work with APIs and objects.
+- Does not work with properties of type `any` giving compilation errors if you use them in your chains of nethods.
+- Does not work with arrays in TypeScript projects giving a compilation error due to bad resolving of the Array API. Although you can cast the chainable to the `any` type and it will work properly but without the type checking and autocompletion (not recommended). Find the sample below
+
+```javascript
+// Typescript
+import { chainable, Chainable } from 'chainablets';
+
+// Prepare
+const rawValue          = [1,2,3,4,5];
+const chainedValue: any = chainable(rawValue);
+
+// Execute
+chainedValue
+.push(6)
+.push(7)
+.push(8)
+.push(9)
+.push(0)
+.shift()
+.pop()
+.length()
+.map((n) => n * 2)
+.reduce((s,n) => s + n)
+
+
+console.assert(chainedValue._getChainReference() === rawValue);
+console.assert(chainedValue._getChainValueAt(5) === 1);
+console.assert(chainedValue._getChainValueAt(6) === 0);
+console.assert(chainedValue._getChainValueAt(7) === 8);
+console.assert(chainedValue._getChainValueAt(8) === [4,6,8,10,12,14,16,18]);
+console.assert(chainedValue._getChainValueAt(9) === 44);
+```

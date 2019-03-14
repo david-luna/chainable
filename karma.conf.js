@@ -16,13 +16,11 @@ module.exports = function(config) {
       }
     },
     reporters: ["dots", "karma-typescript"],
-    // browsers: ["Firefox", "Chrome"]
-    browsers: ["Chrome"]
+    browsers: ["ChromeHeadless"]
   };
 
   // Change for CI
   if (process.env.TRAVIS) {
-    options.browsers = ["Firefox"];
     options.singleRun = true;
     options.karmaTypescriptConfig.reports = {
       "lcovonly": {

@@ -3,7 +3,7 @@ node_js:
   - "stable"
 cache: npm
 addons:
-  firefox: latest
+  #firefox: latest
   chrome: "stable"
 branches:
   only:
@@ -11,10 +11,10 @@ branches:
 jobs:
   include:
     - stage: test with Karma
-      before_script:
-        - export DISPLAY=:99.0
-        - sh -e /etc/init.d/xvfb start
-        - sleep 3
+      # before_script:
+      #   - export DISPLAY=:99.0
+      #   - sh -e /etc/init.d/xvfb start
+      #   - sleep 3
       script:
         - npm test
         - npm run lcov
