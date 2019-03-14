@@ -72,7 +72,7 @@ describe('chain with Sync Storage (local & session)', () => {
     it('should work with removeItem', done => {
       // Execute
       for ( let a in data ) {
-        storage = storage.removeItem(a, data[a]);
+        storage = storage.removeItem(a);
       }
 
       // Expect
