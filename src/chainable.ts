@@ -50,6 +50,23 @@ const getProperties = ( source: Object ): string[] => {
 }
 
 /**
+ * 
+ * @param source the object where to check for the property
+ * @param key    the property key to lookup
+ */
+const hasProperty = ( source: Object, key: string ): boolean => {
+  // End of recursion cases
+  if ( !source ) {
+    return false;
+  }
+  if ( Object.getOwnPropertyNames(source).indexOf(key) !== -1 ) {
+    return true;
+  }
+  // recursion
+  return hasProperty(Object.getPrototypeOf(source), key);
+}
+
+/**
  * Returns an chainable object with the same API and properites like the source with 2 differences
  * - properties become a getter/setter method depending if they have parameter
  * - we get 2 extra properties
@@ -58,25 +75,22 @@ const getProperties = ( source: Object ): string[] => {
  * @param source the object to make chainable
  */
 export function chainable<T extends object>( source: T ): Chainable<T> {
-  // initialize values array & props
-  const props : string[] = getProperties(source);
-  const values: any[]    = [];
+  // initialize values array
+  const values: any[] = [];
 
   // Use Proxy to also allow to work also with unsetted props
   const proxy = new Proxy(source, {
     get: function ( target: Object, propKey: string ) {
-      // Return reference if requested
+      // Return reference or values if requested
       if ( propKey === ChainableKeys._getChainReference ) {
         return () => source;
       }
-      // Return values if requested
       if ( propKey === ChainableKeys._getChainValueAt ) {
         return (index: number) => values[index];
       }
 
-      // Throw if undetected property
-      // TODO: strict mode off?
-      if ( props.indexOf(propKey) === -1 ) {
+      // Throw if undetected property in strict mode
+      if ( !hasProperty(source, propKey) && chainable.prototype.strict ) {
         throw new TypeError(`Chainable: the property ${propKey} is not available in the proto of source object`);
       }
 
@@ -88,7 +102,7 @@ export function chainable<T extends object>( source: T ): Chainable<T> {
         }
       }
 
-      // Default accessor function by default
+      // Default accessor getter/setter function by default 
       return function ( ...args: any[] ) {
         if ( args.length === 0 ) {
           values.push(target[propKey]);
@@ -102,3 +116,6 @@ export function chainable<T extends object>( source: T ): Chainable<T> {
 
   return proxy;
 }
+
+// Set default valu for stric mode
+chainable.prototype.strict = false;

@@ -5,9 +5,10 @@ cache: npm
 addons:
   #firefox: latest
   chrome: "stable"
-branches:
-  only:
-    - master
+# branches:
+#   only:
+#     - master
+if: tag IS present
 jobs:
   include:
     - stage: test with Karma
