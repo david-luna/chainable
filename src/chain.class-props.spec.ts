@@ -30,7 +30,7 @@ class TestPropsClass {
 }
 
 
-describe('chain with class properties', () => {
+describe('chainable with class properties', () => {
 
   let rawValue: TestPropsClass;
   let chained : Chainable<TestPropsClass>;
@@ -47,13 +47,6 @@ describe('chain with class properties', () => {
 
   describe('class properties with strict mode ON', () => {
     
-    beforeEach(() => {
-      chainable.prototype.strict = true;
-    });
-    afterEach(() => {
-      chainable.prototype.strict = false;
-    });
-
     it('should fail for private or non initialised public properties', done => {
       // Execute
 
@@ -122,6 +115,13 @@ describe('chain with class properties', () => {
 
   describe('class properties with strict mode OFF', () => {
 
+    beforeEach(() => {
+      chainable.prototype.strict = false;
+    });
+    afterEach(() => {
+      chainable.prototype.strict = true;
+    });
+
     it('should succed for private or non initialised public properties', done => {
       // Execute
 
@@ -134,36 +134,6 @@ describe('chain with class properties', () => {
       expect(() => (<any>chained).priBooleanProp).not.toThrowError(TypeError);
       expect(() => (<any>chained).priNumberProp).not.toThrowError(TypeError);
       expect(() => (<any>chained).priStringProp).not.toThrowError(TypeError);
-      done();
-    });
-
-    it('should work with public properties already set', done => {
-      // Preapare
-      const ifaceVal: PropsInterface = { bol: true, num: 1, str: 'test' };
-      const classVal: PropClass = new PropClass();
-      rawValue.pubBooleanProp = false;
-      rawValue.pubNumberProp  = 0;
-      rawValue.pubStringProp  = '';
-      rawValue.pubIfaceProp   = ifaceVal;
-      rawValue.pubClassProp   = classVal;
-
-      // Execute
-      chained
-      .pubBooleanProp(true)
-      .pubNumberProp(1)
-      .pubStringProp('test')
-      .pubIfaceProp(ifaceVal)
-      .pubClassProp(classVal)
-      // .pubAnyProp({ val: 'test' })
-
-      // Expect
-      expect(rawValue.pubBooleanProp).toBe(true);
-      expect(rawValue.pubNumberProp).toBe(1);
-      expect(rawValue.pubStringProp).toBe('test');
-      expect(rawValue.pubIfaceProp).toBe(ifaceVal);
-      expect(rawValue.pubClassProp).toBe(classVal);
-      // expect(rawValue.pubAnyProp).toEqual({ val: 'test' });
-      expect(chained._getChainReference()).toBe(rawValue);
       done();
     });
 

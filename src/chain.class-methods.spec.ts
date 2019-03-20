@@ -28,18 +28,15 @@ describe('chain with class properties', () => {
 
   describe('class methods with strict mode ON', () => {
 
-    xit('should fail for private methods', done => {
+    it('should fail for static methods', done => {
       // Execute
 
       // Expect
-      // This works (and not throws) because in JS there is not such thing as private
-      // TypeScript will check and complain but at runtime the property of that
-      // "private method" is there and we detect it
-      expect(() => (<any>chained).priStringMethod()).toThrowError(TypeError);
+      expect(() => (<any>chained).staticMethod).toThrowError(TypeError);
       done();
     });
 
-    it('should work with public properties already set', done => {
+    it('should work with public methods', done => {
       // Preapare
       spyOn(rawValue, 'pubStringMethod').and.callThrough();
 
@@ -53,99 +50,73 @@ describe('chain with class properties', () => {
       done();
     });
 
-    it('should fail for static properties', done => {
+    it('should pass for private methods', done => {
+      // Prepare
+      spyOn(rawValue, <any>'priStringMethod').and.callThrough();
       // Execute
 
       // Expect
-      expect(() => (<any>chained).staticMethod).toThrowError(TypeError);
+      // This works (and not throws) because in JS there is not such thing as private
+      // TypeScript will check and complain but at runtime the property of that
+      // "private method" is there and we detect it
+      expect(() => (<any>chained).priStringMethod('hello')).not.toThrowError(TypeError);
+      expect((<any>rawValue).priStringMethod).toHaveBeenCalledWith('hello');
+      done();
+    });
+
+    it('should fail for methods which are not defined in the class', done => {
+      // Prepare
+      
+      // Expect
+      // Custom properties
+      expect(() => (<any>chained).unknownMethod()).toThrowError(TypeError);
       done();
     });
     
-    xit('should fail with properties which are not defined in the class', done => {
+    it('should pass for methods which are not defined in the class', done => {
       // Prepare
-      // If we define it at runtime we won get any error
-      rawValue['unknownMethod'] = () => ``;
+      // If we define it at runtime we wont get any error
+      rawValue['unknownMethod'] = () => 'unknownResult';
+      spyOn(rawValue, <any>'unknownMethod').and.callThrough();
 
       // Expect
       // Custom properties
-      expect(() => (<any>chained).unknownMethod).toThrowError(TypeError);
+      expect(() => (<any>chained).unknownMethod()).not.toThrowError(TypeError);
+      expect(chained._getChainValueAt(0)).toEqual('unknownResult')
       done();
     });
 
   });
 
-  // describe('class properties with strict mode OFF', () => {
+  describe('class methods with strict mode OFF', () => {
+    beforeEach(() => {
+      chainable.prototype.strict = false;
+    });
+    afterEach(() => {
+      chainable.prototype.strict = true;
+    });
 
-  //   beforeEach(() => {
-  //     chainable.prototype.strict = false;
-  //   });
-  //   afterEach(() => {
-  //     chainable.prototype.strict = true;
-  //   });
+    it('should pass for static methods', done => {
+      // Execute
 
-  //   it('should succed for private or non initialised public properties', done => {
-  //     // Execute
-
-  //     // Expect
-  //     expect(() => (<any>chained).pubBooleanProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).pubNumberProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).pubStringProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).pubIfaceProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).pubClassProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).priBooleanProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).priNumberProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).priStringProp).not.toThrowError(TypeError);
-  //     done();
-  //   });
-
-  //   it('should work with public properties already set', done => {
-  //     // Preapare
-  //     const ifaceVal: PropsInterface = { bol: true, num: 1, str: 'test' };
-  //     const classVal: PropClass = new PropClass();
-  //     rawValue.pubBooleanProp = false;
-  //     rawValue.pubNumberProp  = 0;
-  //     rawValue.pubStringProp  = '';
-  //     rawValue.pubIfaceProp   = ifaceVal;
-  //     rawValue.pubClassProp   = classVal;
-
-  //     // Execute
-  //     chained
-  //     .pubBooleanProp(true)
-  //     .pubNumberProp(1)
-  //     .pubStringProp('test')
-  //     .pubIfaceProp(ifaceVal)
-  //     .pubClassProp(classVal)
-  //     // .pubAnyProp({ val: 'test' })
-
-  //     // Expect
-  //     expect(rawValue.pubBooleanProp).toBe(true);
-  //     expect(rawValue.pubNumberProp).toBe(1);
-  //     expect(rawValue.pubStringProp).toBe('test');
-  //     expect(rawValue.pubIfaceProp).toBe(ifaceVal);
-  //     expect(rawValue.pubClassProp).toBe(classVal);
-  //     // expect(rawValue.pubAnyProp).toEqual({ val: 'test' });
-  //     expect(chained._getChainReference()).toBe(rawValue);
-  //     done();
-  //   });
-
-  //   it('should work for static properties', done => {
-  //     // Execute
-
-  //     // Expect
-  //     expect(() => (<any>chained).staticStringProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).staticNumberProp).not.toThrowError(TypeError);
-  //     expect(() => (<any>chained).staticStringProp).not.toThrowError(TypeError);
-  //     done();
-  //   });
+      // Expect
+      expect(() => (<any>chained).staticMethod()).not.toThrowError(TypeError);
+      done();
+    });
     
-  //   it('should work with properties which are not defined in the class', done => {
-  //     // Execute
+    it('should pass for methods which are not defined in the class', done => {
+      // Prepare
+      // If we define it at runtime we wont get any error
+      rawValue['unknownMethod'] = () => 'unknownResult';
+      spyOn(rawValue, <any>'unknownMethod').and.callThrough();
 
-  //     // Expect
-  //     // Custom properties
-  //     expect(() => (<any>chained).unknownProp).not.toThrowError(TypeError);
-  //     done();
-  //   });
+      // Expect
+      // Custom properties
+      expect(() => (<any>chained).unknownMethod()).not.toThrowError(TypeError);
+      expect(chained._getChainValueAt(0)).toEqual('unknownResult')
+      done();
+    });
 
-  // });
+  });
+
 });

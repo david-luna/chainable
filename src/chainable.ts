@@ -37,19 +37,6 @@ enum ChainableKeys {
 }
 
 /**
- * Retunrs the list of enumerable and non enumeravble propertires up to the prototype chain
- * @param source the object to get properties from
- */
-const getProperties = ( source: Object ): string[] => {
-  // At the end we get no object
-  if ( !source ) return [];
-
-  // Get names and concat with recursive call to the prototype
-  const proto: any = Object.getPrototypeOf(source);
-  return Object.getOwnPropertyNames(source).concat(getProperties(proto));
-}
-
-/**
  * 
  * @param source the object where to check for the property
  * @param key    the property key to lookup
@@ -117,5 +104,5 @@ export function chainable<T extends object>( source: T ): Chainable<T> {
   return proxy;
 }
 
-// Set default valu for stric mode
-chainable.prototype.strict = false;
+// Set default value for stric mode
+chainable.prototype.strict = true;
