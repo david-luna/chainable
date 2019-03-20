@@ -15,7 +15,15 @@ A script function that allows you to make method chainig for any object/API
 npm install --save chainablets
 ```
 
+## Requirements
+
+- This util is only supported in browsers which has the Proxy API.
+- This util does not work with properties of type `any` but is expected to suppot them in future releases.
+- This util makes use of TS generics and builtin types like `Parameters<T>` so Ts version 3.1.6+ is recommended.
+
 ## Usage
+
+### Basic
 
 ```javascript
 // Typescript
@@ -44,7 +52,8 @@ console.assert(elem === chained._getChainReference());
 console.assert(chained._getChainValueAt(4) === elem.target);
 ```
 
-For JS just remove typings only import the method
+For JS just remove typings and change imports for require statements
+
 ```javascript
 // JavaScript
 const chainable = require('chainablets');
@@ -53,23 +62,50 @@ const chainable = require('chainablets');
 let elem    = document.createElement('a');
 let chained = chainable(elem);
 
-// Use original API but chaining methods
-chained
-  // Properties become getter/setter methods
-  .id('my-anchor')
-  .href('http://www.google.com')
-  // You can also call the original API
-  .setAttribute('disabled', 'true')
-  .setAttribute('custom-attr', 'custom data')
-  .getAttribute('target')
-
-// You can get the original reference
-console.assert(elem === chained._getChainReference());
-// and also the return value of a certain call
-console.assert(chained._getChainValueAt(4) === elem.target);
+// Same as the example above
+// ...
 ```
 
 Not tested in node yet but it might work too :)
+
+### Strict mode
+
+This utility has a `strict mode` by default. In strict mode any call to the chainable API of the object will throw an error if the source object does not have the property/method requested as own or as part of the prototype chain. For example the following code fails
+
+```javascript
+class MyClass {
+  prop: string;
+}
+let c: Chainable<MyClass> = chainable(new MyClass());
+
+c.prop('value') // TypeError: the property prop is not available
+```
+
+This happend because TypeScript (and I guess Babel too) do not set the property if it doesn not have a init value in the class defintion or the constructor. So a 1st value must be set
+
+```javascript
+class MyClass {
+  // this solves the TypeError
+  prop: string = 'default';
+  // this solves the TypeError too
+  constructor (p: strng) {
+    this.prop = p;
+  }
+}
+let c: Chainable<MyClass> = chainable(new MyClass());
+
+c.prop('value') // this works
+```
+
+You can deactivate strict mode and reactivate whenever you want but is recommended to not change it at runtime. Stric mode is recommended.
+
+```javascript
+// Deactivate strict mode
+chainable.prototype.strict = false;
+// Do chainable stuff
+// Activate strict mode again
+chainable.prototype.strict = true;
+```
 
 ## Known issues & limitations
 
@@ -103,6 +139,6 @@ console.assert(chainedValue._getChainReference() === rawValue);
 console.assert(chainedValue._getChainValueAt(5) === 1);
 console.assert(chainedValue._getChainValueAt(6) === 0);
 console.assert(chainedValue._getChainValueAt(7) === 8);
-console.assert(chainedValue._getChainValueAt(8) === [4,6,8,10,12,14,16,18]);
+console.log(chainedValue._getChainValueAt(8)); // [4,6,8,10,12,14,16,18]
 console.assert(chainedValue._getChainValueAt(9) === 44);
 ```
