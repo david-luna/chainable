@@ -4,17 +4,30 @@ node_js:
 cache: npm
 addons:
   chrome: "stable"
-if: tag IS present
-jobs:
-  include:
-    - stage: test with Karma
-      script:
-        - npm test
-        - npm run lcov
-    - stage: release to npm
-      script: npm run build
-      deploy:
-        provider: npm
-        email: "$NPM_EMAIL"
-        api_key: "$NPM_TOKEN"
-        skip_cleanup: true
+branches:
+  only: master
+script:
+  - npm test
+  - npm run lcov
+  - npm run build
+deploy:
+  provider: npm
+  email: "$NPM_EMAIL"
+  api_key: "$NPM_TOKEN"
+  skip_cleanup: true
+  on:
+    tags: true
+
+# jobs:
+#   include:
+#     - stage: test with Karma
+#       script:
+#         - npm test
+#         - npm run lcov
+#     - stage: release to npm
+#       script: npm run build
+#       deploy:
+#         provider: npm
+#         email: "$NPM_EMAIL"
+#         api_key: "$NPM_TOKEN"
+#         skip_cleanup: true
