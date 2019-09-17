@@ -1,4 +1,4 @@
-import { chainable, Chainable } from './chainable';
+import { chainable } from './chainable';
 
 describe('chain with js types', () => {
 
@@ -9,21 +9,21 @@ describe('chain with js types', () => {
 
     it('should work properly if we cast to any type', done => {
       // Prepare
-      const rawValue          = [1,2,3,4,5];
-      const chainedValue: any = chainable(rawValue);
+      const rawValue     = [1,2,3,4,5];
+      const chainedValue = chainable(rawValue);
 
       // Execute
-      chainedValue
-      .push(6)
-      .push(7)
-      .push(8)
-      .push(9)
-      .push(0)
-      .shift()
-      .pop()
-      .length()
-      .map((n) => n * 2)
-      .reduce((s,n) => s + n)
+      let ret = chainedValue.push((num) => chainable([]));
+      // .push(6)
+      // .push(7)
+      // .push(8)
+      // .push(9)
+      // .push(0)
+      // .shift()
+      // .pop()
+      // .length()
+      // .map((n) => n * 2)
+      // .reduce((s,n) => s + n)
       
 
       // Expect

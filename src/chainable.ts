@@ -16,6 +16,14 @@ type Chain<T>    = {
                     (val?: T[K]) => Chainable<T>;
 };
 
+type ChainTest<T> = {
+  [K in keyof T]?:  T[K] extends AnyFunction ? K: T[K];
+};
+
+let test: Array<number> = {} as any;
+
+test.pop();
+
 /**
  * This type is to add extra properties for our accessor methods
  * `_getChainReference` is a method which returns the original object
@@ -104,5 +112,5 @@ export function chainable<T extends object>( source: T ): Chainable<T> {
   return proxy;
 }
 
-// Set default value for stric mode
+// Set default value for strict mode
 chainable.prototype.strict = true;

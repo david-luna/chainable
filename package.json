@@ -9,8 +9,8 @@
     "url": "https://github.com/david-luna/chainable/issues"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/david-luna/chainable.git"
+    "type": "git",
+    "url": "https://github.com/david-luna/chainable.git"
   },
   "scripts": {
     "build": "tsc",
