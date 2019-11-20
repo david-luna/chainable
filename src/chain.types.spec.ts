@@ -13,18 +13,17 @@ describe('chain with js types', () => {
       const chainedValue = chainable(rawValue);
 
       // Execute
-      let ret = chainedValue.push((num) => chainable([]));
-      // .push(6)
-      // .push(7)
-      // .push(8)
-      // .push(9)
-      // .push(0)
-      // .shift()
-      // .pop()
-      // .length()
-      // .map((n) => n * 2)
-      // .reduce((s,n) => s + n)
-      
+      chainedValue
+      .push(6)
+      .push(7)
+      .push(8)
+      .push(9)
+      .push(0)
+      .shift()
+      .pop()
+      .length()
+      .map((n) => n * 2)
+      .reduce((s: number, n: number) => s + n, 0)
 
       // Expect
       expect(chainedValue._getChainReference()).toBe(rawValue);
@@ -106,7 +105,7 @@ describe('chain with js types', () => {
 
     it('should resolve all interface types properly with the primitive', done => {
       // Prepare
-      const rawValue     = new Set();
+      const rawValue     = new Set(['val0']);
       const chainedValue = chainable<Set<string>>(rawValue);
 
       // Execute
@@ -122,7 +121,7 @@ describe('chain with js types', () => {
 
       // Expect
       expect(chainedValue._getChainReference()).toBe(rawValue);
-      expect(chainedValue._getChainValueAt(2)).toEqual(2);
+      expect(chainedValue._getChainValueAt(2)).toEqual(3);
       expect(chainedValue._getChainValueAt(3)).toEqual(true);
       expect(chainedValue._getChainValueAt(5)).toEqual(false);
       expect(chainedValue._getChainValueAt(7)).toEqual(0);
