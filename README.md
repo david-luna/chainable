@@ -66,6 +66,42 @@ let chained = chainable(elem);
 // ...
 ```
 
+THis new release also gives support to array types without the need to cast to `any` type so you
+will get the autocompletion in your IDE. Although some method may not have its params badly inferred
+as unknown (reduce calback param is one of them). You can set the type to avoid typing errors.
+
+```javascript
+// Typescript
+import { chainable, Chainable } from 'chainablets';
+
+// Prepare
+const rawValue     = [1,2,3,4,5];
+const chainedValue = chainable(rawValue);
+
+// Execute
+chainedValue
+.push(6)
+.push(7)
+.push(8)
+.push(9)
+.push(0)
+.shift()
+.pop()
+.length()
+// map does have propetly inferred callbacks
+.map((n) => n * 2)
+// but reduce has callback params as unknow (type them for the compiler)
+.reduce((s: number, n: number) => s + n, 0)
+
+
+console.assert(chainedValue._getChainReference() === rawValue);
+console.assert(chainedValue._getChainValueAt(5) === 1);
+console.assert(chainedValue._getChainValueAt(6) === 0);
+console.assert(chainedValue._getChainValueAt(7) === 8);
+console.log(chainedValue._getChainValueAt(8)); // [4,6,8,10,12,14,16,18]
+console.assert(chainedValue._getChainValueAt(9) === 44);
+```
+
 Not tested in node yet but it might work too :)
 
 ### Strict mode
@@ -111,34 +147,3 @@ chainable.prototype.strict = true;
 
 - Does not work with primitives (boolean, string, number, symbol) or funcitons since is meant to work with APIs and objects.
 - Does not work with properties of type `any` giving compilation errors if you use them in your chains of nethods.
-- Does not work with arrays in TypeScript projects giving a compilation error due to bad resolving of the Array API. Although you can cast the chainable to the `any` type and it will work properly but without the type checking and autocompletion (not recommended). Find the sample below
-
-```javascript
-// Typescript
-import { chainable, Chainable } from 'chainablets';
-
-// Prepare
-const rawValue          = [1,2,3,4,5];
-const chainedValue: any = chainable(rawValue);
-
-// Execute
-chainedValue
-.push(6)
-.push(7)
-.push(8)
-.push(9)
-.push(0)
-.shift()
-.pop()
-.length()
-.map((n) => n * 2)
-.reduce((s,n) => s + n)
-
-
-console.assert(chainedValue._getChainReference() === rawValue);
-console.assert(chainedValue._getChainValueAt(5) === 1);
-console.assert(chainedValue._getChainValueAt(6) === 0);
-console.assert(chainedValue._getChainValueAt(7) === 8);
-console.log(chainedValue._getChainValueAt(8)); // [4,6,8,10,12,14,16,18]
-console.assert(chainedValue._getChainValueAt(9) === 44);
-```

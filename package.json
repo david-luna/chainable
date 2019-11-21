@@ -1,6 +1,6 @@
 {
   "name": "chainablets",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Make something chainable",
   "author": "David Luna",
   "license": "MIT",
@@ -9,8 +9,8 @@
     "url": "https://github.com/david-luna/chainable/issues"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/david-luna/chainable.git"
+    "type": "git",
+    "url": "https://github.com/david-luna/chainable.git"
   },
   "scripts": {
     "build": "tsc",
@@ -32,7 +32,7 @@
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^1.1.2",
     "karma-typescript": "^3.0.12",
-    "typescript": "^3.1.6"
+    "typescript": "^3.7.2"
   },
   "dependencies": {}
 }

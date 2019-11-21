@@ -4,17 +4,29 @@
 type AnyFunction = (...args: any[]) => any;
 
 /**
- * this type transforms other types by declaring all properties
+ * These types transforms other types by declaring all properties
  * as method which return the same type
  * Making it chainable (yay!!)
  * We keep method signature by inferring the parameters using TS built-in types
  * https://stackoverflow.com/questions/50773038/inferring-function-parameters-in-typescript
  * (see second answer)
  */
-type Chain<T>    = {
+type ChainObject<T> = {
   [K in keyof T]?:  T[K] extends AnyFunction ? (...args: Parameters<T[K]>) => Chainable<T> :
                     (val?: T[K]) => Chainable<T>;
 };
+
+type ChainArray<T> = {
+  [K in keyof Array<T>]?: K extends number ? (val?: T) => ChainArray<T> :
+                          K extends 'length' ? (length?: number) => ChainArray<T> :
+                          Array<T>[K] extends AnyFunction ? (...args: Parameters<Array<T>[K]>) => ChainArray<T>:
+                          never;
+};
+
+// Thanks to https://dev.to/aexol/typescript-tutorial-infer-keyword-2cn
+// I've got better idea of how to use infer :)
+type Chain<T> = T extends Array<infer K> ? ChainArray<K> : ChainObject<T>;
+
 
 /**
  * This type is to add extra properties for our accessor methods
@@ -104,5 +116,5 @@ export function chainable<T extends object>( source: T ): Chainable<T> {
   return proxy;
 }
 
-// Set default value for stric mode
+// Set default value for strict mode
 chainable.prototype.strict = true;
