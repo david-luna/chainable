@@ -5,7 +5,9 @@ cache: npm
 addons:
   chrome: "stable"
 branches:
-  only: master
+  only:
+    - master
+    - /\d+\.\d+\.\d+/
 script:
   - npm test
   - npm run lcov
@@ -16,4 +18,6 @@ deploy:
   api_key: "$NPM_TOKEN"
   skip_cleanup: true
   on:
+    repo: david-luna/chainable
     tags: true
+    all_branches: true
