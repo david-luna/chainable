@@ -43,7 +43,7 @@ describe('chain with js types', () => {
     it('should resolve all interface types properly with the primitive', done => {
       // Prepare
       const rawValue     = new Map();
-      const chainedValue = chainable<Map<string, string>>(rawValue);
+      const chainedValue = chainable(rawValue);
 
       // Execute
       chainedValue
@@ -76,7 +76,7 @@ describe('chain with js types', () => {
     it('should resolve all interface types properly with the primitive', done => {
       // Prepare
       const rawValue     = new WeakMap();
-      const chainedValue = chainable<WeakMap<object, string>>(rawValue);
+      const chainedValue = chainable(rawValue);
       const key1 = new String('1');
       const key2 = new String('1');
       const key3 = new String('1');
@@ -106,7 +106,7 @@ describe('chain with js types', () => {
     it('should resolve all interface types properly with the primitive', done => {
       // Prepare
       const rawValue     = new Set(['val0']);
-      const chainedValue = chainable<Set<string>>(rawValue);
+      const chainedValue = chainable(rawValue);
 
       // Execute
       chainedValue
@@ -125,6 +125,73 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainValueAt(3)).toEqual(true);
       expect(chainedValue._getChainValueAt(5)).toEqual(false);
       expect(chainedValue._getChainValueAt(7)).toEqual(0);
+      done();
+    });
+
+  });
+
+  describe('String type', () => {
+
+    it('should resolve all interface types properly with the primitive', done => {
+      // Prepare
+      const rawValue     = `I'm working with strings`;
+      const chainedValue = chainable(rawValue);
+
+      // Execute
+      chainedValue
+      .replace('working', 'replacing')
+      .repeat(2)
+      .slice(0, -7)
+      .toUpperCase()
+
+      // Expect
+      expect(chainedValue._getChainReference()).toBe(rawValue);
+      expect(chainedValue._getChainValueAt(0)).toEqual(`I'm replacing with strings`);
+      expect(chainedValue._getChainValueAt(1)).toEqual(`I'm working with stringsI'm working with strings`);
+      expect(chainedValue._getChainValueAt(2)).toEqual(`I'm working with `);
+      expect(chainedValue._getChainValueAt(3)).toEqual(`I'M WORKING WITH STRINGS`);
+      done();
+    });
+
+  });
+
+  describe('Number type', () => {
+
+    it('should resolve all interface types properly with the primitive', done => {
+      // Prepare
+      const rawValue     = 300;
+      const chainedValue = chainable(rawValue);
+
+      // Execute
+      chainedValue
+      .toFixed(2)
+      .toExponential()
+
+      // Expect
+      expect(chainedValue._getChainReference()).toBe(rawValue);
+      expect(chainedValue._getChainValueAt(0)).toEqual(`300.00`);
+      expect(chainedValue._getChainValueAt(1)).toEqual(`3e+2`);
+      done();
+    });
+
+  });
+
+  describe('Boolean type', () => {
+
+    it('should resolve all interface types properly with the primitive', done => {
+      // Prepare
+      const rawValue     = true;
+      const chainedValue = chainable(rawValue);
+
+      // Execute
+      chainedValue
+      .valueOf()
+      .toString()
+
+      // Expect
+      expect(chainedValue._getChainReference()).toBe(rawValue);
+      expect(chainedValue._getChainValueAt(0)).toEqual(true);
+      expect(chainedValue._getChainValueAt(1)).toEqual(`true`);
       done();
     });
 
