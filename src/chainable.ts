@@ -25,7 +25,10 @@ type ChainArray<T> = {
 
 // Thanks to https://dev.to/aexol/typescript-tutorial-infer-keyword-2cn
 // I've got better idea of how to use infer :)
-type Chain<T> = T extends Array<infer K> ? ChainArray<K> : ChainObject<T>;
+type Chain<T> = T extends number ? ChainObject<Number> :
+                // T extends string ? ChainObject<String> :
+                T extends boolean ? ChainObject<Boolean> :
+                T extends Array<infer K> ? ChainArray<K> : ChainObject<T>;
 
 
 /**
@@ -73,12 +76,30 @@ const hasProperty = ( source: Object, key: string ): boolean => {
  *   2. `_getChainValueAt` method which returns the result of the nth call
  * @param source the object to make chainable
  */
-export function chainable<T extends object>( source: T ): Chainable<T> {
+export function chainable<T>( source: T ): Chainable<T> {
   // initialize values array
   const values: any[] = [];
 
+  // make sure we're passing an object
+  const sourceType: string = typeof source;
+  let sourceObj: Object    = source;
+
+  switch(sourceType) {
+    case 'string':
+      sourceObj = new String(source);
+      break;
+    case 'number':
+        sourceObj = new Number(source);
+        break;
+    case 'boolean':
+      sourceObj = new Boolean(source);
+      break;
+    default:
+      sourceObj = source;
+  }
+
   // Use Proxy to also allow to work also with unsetted props
-  const proxy = new Proxy(source, {
+  const proxy = new Proxy(sourceObj, {
     get: function ( target: Object, propKey: string ) {
       // Return reference or values if requested
       if ( propKey === ChainableKeys._getChainReference ) {
