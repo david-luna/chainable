@@ -1,5 +1,5 @@
 /**
- * Shortand for typing any kind of function
+ * Shorthand for typing any kind of function
  */
 type AnyFunction = (...args: any[]) => any;
 
@@ -26,7 +26,6 @@ type ChainArray<T> = {
 // Thanks to https://dev.to/aexol/typescript-tutorial-infer-keyword-2cn
 // I've got better idea of how to use infer :)
 type Chain<T> = T extends number ? ChainObject<Number> :
-                // T extends string ? ChainObject<String> :
                 T extends boolean ? ChainObject<Boolean> :
                 T extends Array<infer K> ? ChainArray<K> : ChainObject<T>;
 
@@ -98,7 +97,7 @@ export function chainable<T>( source: T ): Chainable<T> {
       sourceObj = source;
   }
 
-  // Use Proxy to also allow to work also with unsetted props
+  // Use Proxy to also allow to work also with unset props
   const proxy = new Proxy(sourceObj, {
     get: function ( target: Object, propKey: string ) {
       // Return reference or values if requested
