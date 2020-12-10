@@ -13,7 +13,7 @@
     "url": "https://github.com/david-luna/chainable.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.prod.json",
     "test": "karma start",
     "lcov": "cat coverage/lcov/lcov.info | coveralls"
   },
