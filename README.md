@@ -145,5 +145,11 @@ chainable.prototype.strict = true;
 
 ## Known issues & limitations
 
-- Does not work with primitives (boolean, string, number, symbol) or funcitons since is meant to work with APIs and objects.
-- Does not work with properties of type `any` giving compilation errors if you use them in your chains of nethods.
+- Does not work with primitives (boolean, string, number, symbol) or functions since is meant to work with APIs and objects.
+- Does not work with properties of type `any` giving compilation errors if you use them in your chains of methods.
+
+## Release notes
+
+### [3.2.1]
+
+* Size optimization in final bundle (removing some tests files included in previous versions)

@@ -2,9 +2,8 @@ import { chainable } from './chainable';
 
 describe('chain with js types', () => {
 
-  // The only types we're goint to cover are Map, WeakMap and Sets
-  // primitives like string, number are out of scope
-
+  // The only types we're going to cover are Map, WeakMap and Sets
+  
   describe('Array type', () => {
 
     it('should work properly if we cast to any type', done => {
