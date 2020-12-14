@@ -16,9 +16,12 @@ type ChainObject<T> = {
                     (val?: T[K]) => Chainable<T>;
 };
 
+type ReducerFunction<T,U> = (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U;
+
 type ChainArray<T> = {
   [K in keyof Array<T>]?: K extends number ? (val?: T) => ChainArray<T> :
                           K extends 'length' ? (length?: number) => ChainArray<T> :
+                          K extends 'reduce' ? (reducer: ReducerFunction<T, any>, initialValue: any) => ChainArray<T> :
                           Array<T>[K] extends AnyFunction ? (...args: Parameters<Array<T>[K]>) => ChainArray<T>:
                           never;
 };
@@ -81,7 +84,7 @@ export function chainable<T>( source: T ): Chainable<T> {
 
   // make sure we're passing an object
   const sourceType: string = typeof source;
-  let sourceObj: Object    = source;
+  let sourceObj: Object;
 
   switch(sourceType) {
     case 'string':
