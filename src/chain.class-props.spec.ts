@@ -1,4 +1,5 @@
-import { chainable, Chainable } from './chainable';
+import { Chainable } from './types';
+import { chainable } from './chainable';
 
 interface PropsInterface {
   str: string;

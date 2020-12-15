@@ -1,5 +1,5 @@
-import { chainable, Chainable } from './chainable';
-
+import { Chainable } from './types';
+import { chainable } from './chainable';
 
 class TestInheritClass {
   public parentStrProp: string;
