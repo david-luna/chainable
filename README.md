@@ -18,7 +18,7 @@ npm install --save chainablets
 ## Requirements
 
 - This util is only supported in browsers which has the Proxy API.
-- This util does not work with properties of type `any` but is expected to suppot them in future releases.
+- This util does not work with properties of type `any` but is expected to support them in future releases.
 - This util makes use of TS generics and builtin types like `Parameters<T>` so Ts version 3.1.6+ is recommended.
 
 ## Usage
@@ -66,9 +66,7 @@ let chained = chainable(elem);
 // ...
 ```
 
-THis new release also gives support to array types without the need to cast to `any` type so you
-will get the autocompletion in your IDE. Although some method may not have its params badly inferred
-as unknown (reduce calback param is one of them). You can set the type to avoid typing errors.
+This lib also supports the following primitive types: Map, WeakMap, Set and Array. It's possible you may not get the proper param types for some Array functions. If you find one please file a bug.
 
 ```javascript
 // Typescript
@@ -117,14 +115,14 @@ let c: Chainable<MyClass> = chainable(new MyClass());
 c.prop('value') // TypeError: the property prop is not available
 ```
 
-This happend because TypeScript (and I guess Babel too) do not set the property if it doesn not have a init value in the class defintion or the constructor. So a 1st value must be set
+This happened because TypeScript (and I guess Babel too) do not set the property if it does not have a init value in the class definition or the constructor. So a 1st value must be set
 
 ```javascript
 class MyClass {
   // this solves the TypeError
   prop: string = 'default';
   // this solves the TypeError too
-  constructor (p: strng) {
+  constructor (p: string) {
     this.prop = p;
   }
 }
@@ -133,7 +131,7 @@ let c: Chainable<MyClass> = chainable(new MyClass());
 c.prop('value') // this works
 ```
 
-You can deactivate strict mode and reactivate whenever you want but is recommended to not change it at runtime. Stric mode is recommended.
+You can deactivate strict mode and reactivate whenever you want but is recommended to not change it at runtime. Strict mode is recommended.
 
 ```javascript
 // Deactivate strict mode
@@ -145,11 +143,16 @@ chainable.prototype.strict = true;
 
 ## Known issues & limitations
 
-- Does not work with primitives (boolean, string, number, symbol) or functions since is meant to work with APIs and objects.
+- Does not work with the following primitives: boolean, string, number, symbol or functions since is meant to work with APIs and objects.
 - Does not work with properties of type `any` giving compilation errors if you use them in your chains of methods.
 
 ## Release notes
 
-### [3.2.1]
+### [0.3.2]
+
+* TypeScript 4 support
+* Added resolution of parameters for Array reduce method
+
+### [0.3.1]
 
 * Size optimization in final bundle (removing some tests files included in previous versions)
