@@ -22,7 +22,7 @@ describe('chain with js types', () => {
       .pop()
       .length()
       .map((n) => n * 2)
-      .reduce((s: number, n: number) => s + n, 0)
+      .reduce((s, n) => s + n, 0)
 
       // Expect
       expect(chainedValue._getChainReference()).toBe(rawValue);

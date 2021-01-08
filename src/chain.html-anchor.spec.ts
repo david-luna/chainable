@@ -1,4 +1,5 @@
-import { chainable, Chainable } from './chainable';
+import { Chainable } from './types';
+import { chainable } from './chainable';
 
 interface ValueExpected {
   value  : any;
@@ -11,7 +12,7 @@ interface ValueExpectedMap {
 
 describe('chain with HTML Anchor element', () => {
 
-  // The elemento to 
+  // The element to 
   let elem   : HTMLAnchorElement;
   let chained: Chainable<HTMLAnchorElement>;
 
@@ -32,17 +33,20 @@ describe('chain with HTML Anchor element', () => {
       href  : { value: 'http://www.google.com/' },
       target: { value: '_blank' },
     };
+    const keys = Object.keys(attrs);
 
     // Execute (use the chain to assign properties)
-    let result: Chainable<HTMLElement> = Object.keys(attrs).reduce((prev: Chainable<HTMLElement>, key: string) => {
+    keys.reduce((prev: Chainable<HTMLElement>, key: string) => {
       return prev[key](attrs[key].value);
     }, chained);
 
 
     // Expect
-    expect(result).toBe(chained);
-    Object.keys(attrs).forEach((key: string) => {
+    keys.forEach((key: string, index: number) => {
+      // The actual element has the value
       expect(elem[key]).toEqual(attrs[key].expect || attrs[key].value);
+      // The value is also in the list of __values__
+      expect(chained._getChainValueAt(index)).toEqual(attrs[key].value);
     });
     done();
   });

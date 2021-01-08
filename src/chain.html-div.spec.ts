@@ -1,4 +1,5 @@
-import { chainable, Chainable } from './chainable';
+import { Chainable } from './types';
+import { chainable } from './chainable';
 
 interface ValueExpected {
   value  : any;
@@ -38,19 +39,18 @@ describe('chain with HTML div element', () => {
       id             : { value: 'elem-id' },
       lang           : { value: 'es-ES' },
       spellcheck     : { value: 'true', expect: true },
-      //style          : { value: 'background-color: red;', expect: { backgroundColor: 'red' } },
+      // style          : { value: 'background-color: red;', expect: { backgroundColor: 'red' } },
       tabIndex       : { value: '1', expect: 1 },
       title          : { value: 'elem-title' },
     };
     const keys: string[] = Object.keys(attrs);
 
     // Execute (use the chain to assign properties)
-    let result: Chainable<HTMLElement> = keys.reduce((prev: Chainable<HTMLElement>, key: string) => {
+    keys.reduce((prev: Chainable<HTMLElement>, key: string) => {
       return prev[key](attrs[key].value);
     }, chained);
 
     // Expect
-    expect(result).toBe(chained);
     keys.forEach(( key: string, index: number ) => {
       // The actual element has the value
       expect(elem[key]).toEqual(attrs[key].expect || attrs[key].value);
