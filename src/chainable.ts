@@ -18,7 +18,7 @@ const hasProperty = ( source: Object, key: string ): boolean => {
 }
 
 /**
- * Returns an chainable object with the same API and properites like the source with 2 differences
+ * Returns an chainable object with the same API and properties like the source with 2 differences
  * - properties become a getter/setter method depending if they have parameter
  * - we get 2 extra properties
  *   1. `_getChainReference` is a method which returns the original object
