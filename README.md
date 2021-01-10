@@ -1,6 +1,6 @@
 # chaniablets
 
-A script function that allows you to make method chainig for any object/API
+A script function that allows you to make method chaining for any object/API
 
 [![GitHub license](https://img.shields.io/npm/l/chainablets.svg)](https://github.com/david-luna/chainable/blob/master/README.md)
 [![Issues](https://img.shields.io/github/issues/david-luna/chainable.svg)](https://github.com/david-luna/chainable/issues)
@@ -26,15 +26,11 @@ npm install --save chainablets
 ### Basic
 
 ```javascript
-// Typescript
-import { chainable, Chainable } from 'chainablets';
-
-let elem   : HTMLAnchorElement;
-let chained: Chainable<HTMLAnchorElement>;
+import { chainable } from 'chainablets';
 
 // Make an object instance chainable by passing to the function
-elem    = document.createElement('a');
-chained = chainable(elem);
+const elem    = document.createElement('a');
+const chained = chainable(elem);
 
 // Use original API but chaining methods
 chained
@@ -52,31 +48,14 @@ console.assert(elem === chained._getChainReference());
 console.assert(chained._getChainValueAt(4) === elem.target);
 ```
 
-For JS just remove typings and change imports for require statements
+This lib also supports the following primitive types: number, string, boolean, Map, WeakMap, Set and Array. It's possible you may not get the proper param types for some Array functions. If you find one please file a bug.
 
 ```javascript
-// JavaScript
-const chainable = require('chainablets');
+import { chainable } from 'chainablets';
 
-// Make an object instance chainable by passing to the function
-let elem    = document.createElement('a');
-let chained = chainable(elem);
-
-// Same as the example above
-// ...
-```
-
-This lib also supports the following primitive types: Map, WeakMap, Set and Array. It's possible you may not get the proper param types for some Array functions. If you find one please file a bug.
-
-```javascript
-// Typescript
-import { chainable, Chainable } from 'chainablets';
-
-// Prepare
 const rawValue     = [1,2,3,4,5];
 const chainedValue = chainable(rawValue);
 
-// Execute
 chainedValue
 .push(6)
 .push(7)
@@ -86,9 +65,7 @@ chainedValue
 .shift()
 .pop()
 .length()
-// map does have propetly inferred callbacks
 .map((n) => n * 2)
-// but reduce has callback params as unknow (type them for the compiler)
 .reduce((s: number, n: number) => s + n, 0)
 
 
@@ -143,10 +120,18 @@ chainable.prototype.strict = true;
 
 ## Known issues & limitations
 
-- Does not work with the following primitives: boolean, string, number, symbol or functions since is meant to work with APIs and objects.
+- Does not work with the following primitives: symbol & functions since is meant to work with APIs and objects.
 - Does not work with properties of type `any` giving compilation errors if you use them in your chains of methods.
 
 ## Release notes
+
+### [0.4.0]
+
+* Switch to JEST for testing
+* Support for number, boolean and string primitives
+* Chainable<T> generic type not exported explicitly
+* Reduce size
+
 
 ### [0.3.2]
 

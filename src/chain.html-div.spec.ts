@@ -12,7 +12,6 @@ interface ValueExpectedMap {
 
 describe('chain with HTML div element', () => {
 
-  // The elemento to 
   let elem   : HTMLDivElement;
   let chained: Chainable<HTMLDivElement>;
 
@@ -26,19 +25,19 @@ describe('chain with HTML div element', () => {
     chained = null;
   });
 
-  it('should let change the attibutes of the element', done => {
-    // We're going to test core HTML attibutes specified in
+  it('should let change the attributes of the element', done => {
+    // We're going to test core HTML attributes specified in
     // https://www.w3.org/TR/2010/WD-html-markup-20100624/common-attributes.html
     const attrs: ValueExpectedMap = {
       accessKey      : { value: 'e' },
       className      : { value: 'elem-class' },
-      contentEditable: { value: 'true' },
+      // contentEditable: { value: 'true' }, // jsdom not supporting it
       dir            : { value: 'rtl' },
-      draggable      : { value: 'true', expect: true },
+      // draggable      : { value: 'true', expect: true }, // jsdom not supporting it
       hidden         : { value: 'hidden', expect: true },
       id             : { value: 'elem-id' },
       lang           : { value: 'es-ES' },
-      spellcheck     : { value: 'true', expect: true },
+      // spellcheck     : { value: 'true', expect: true }, // jsdom not supporting it
       // style          : { value: 'background-color: red;', expect: { backgroundColor: 'red' } },
       tabIndex       : { value: '1', expect: 1 },
       title          : { value: 'elem-title' },
