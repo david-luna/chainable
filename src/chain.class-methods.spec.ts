@@ -28,16 +28,15 @@ describe('chain with class properties', () => {
 
   describe('class methods with strict mode ON', () => {
 
-    it('should fail for static methods', done => {
+    it('should fail for static methods', () => {
       // Execute
 
       // Expect
       expect(() => (<any>chained).staticMethod).toThrowError(TypeError);
-      done();
     });
 
-    it('should work with public methods', done => {
-      // Preapare
+    it('should work with public methods', () => {
+      // Prepare
       spyOn(rawValue, 'pubStringMethod').and.callThrough();
 
       // Execute
@@ -47,10 +46,9 @@ describe('chain with class properties', () => {
       // Expect
       expect(rawValue.pubStringMethod).toHaveBeenCalledWith('hello');
       expect(chained._getChainReference()).toBe(rawValue);
-      done();
     });
 
-    it('should pass for private methods', done => {
+    it('should pass for private methods', () => {
       // Prepare
       spyOn(rawValue, <any>'priStringMethod').and.callThrough();
       // Execute
@@ -61,19 +59,17 @@ describe('chain with class properties', () => {
       // "private method" is there and we detect it
       expect(() => (<any>chained).priStringMethod('hello')).not.toThrowError(TypeError);
       expect((<any>rawValue).priStringMethod).toHaveBeenCalledWith('hello');
-      done();
     });
 
-    it('should fail for methods which are not defined in the class', done => {
+    it('should fail for methods which are not defined in the class', () => {
       // Prepare
       
       // Expect
       // Custom properties
       expect(() => (<any>chained).unknownMethod()).toThrowError(TypeError);
-      done();
     });
     
-    it('should pass for methods which are not defined in the class', done => {
+    it('should pass for methods which are not defined in the class', () => {
       // Prepare
       // If we define it at runtime we wont get any error
       rawValue['unknownMethod'] = () => 'unknownResult';
@@ -83,9 +79,7 @@ describe('chain with class properties', () => {
       // Custom properties
       expect(() => (<any>chained).unknownMethod()).not.toThrowError(TypeError);
       expect(chained._getChainValueAt(0)).toEqual('unknownResult')
-      done();
     });
-
   });
 
   describe('class methods with strict mode OFF', () => {
@@ -96,15 +90,14 @@ describe('chain with class properties', () => {
       chainable.prototype.strict = true;
     });
 
-    it('should pass for static methods', done => {
+    it('should pass for static methods', () => {
       // Execute
 
       // Expect
       expect(() => (<any>chained).staticMethod()).not.toThrowError(TypeError);
-      done();
     });
     
-    it('should pass for methods which are not defined in the class', done => {
+    it('should pass for methods which are not defined in the class', () => {
       // Prepare
       // If we define it at runtime we wont get any error
       rawValue['unknownMethod'] = () => 'unknownResult';
@@ -114,9 +107,6 @@ describe('chain with class properties', () => {
       // Custom properties
       expect(() => (<any>chained).unknownMethod()).not.toThrowError(TypeError);
       expect(chained._getChainValueAt(0)).toEqual('unknownResult')
-      done();
     });
-
   });
-
 });

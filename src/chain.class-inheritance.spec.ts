@@ -36,7 +36,7 @@ describe('chainable with properties & method inheritance', () => {
 
   beforeEach(() => {
     rawValue = new TestInheritChildClass();
-    chained  = chainable<TestInheritChildClass>(rawValue);
+    chained  = chainable(rawValue);
   });
   afterEach(() => {
     rawValue = null;

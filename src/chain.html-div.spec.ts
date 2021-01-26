@@ -9,7 +9,6 @@ interface ValueExpectedMap {
   [prop:string]: ValueExpected;
 }
 
-
 describe('chain with HTML div element', () => {
 
   let elem   : HTMLDivElement;
@@ -25,7 +24,7 @@ describe('chain with HTML div element', () => {
     chained = null;
   });
 
-  it('should let change the attributes of the element', done => {
+  it('should let change the attributes of the element', () => {
     // We're going to test core HTML attributes specified in
     // https://www.w3.org/TR/2010/WD-html-markup-20100624/common-attributes.html
     const attrs: ValueExpectedMap = {
@@ -38,7 +37,7 @@ describe('chain with HTML div element', () => {
       id             : { value: 'elem-id' },
       lang           : { value: 'es-ES' },
       // spellcheck     : { value: 'true', expect: true }, // jsdom not supporting it
-      // style          : { value: 'background-color: red;', expect: { backgroundColor: 'red' } },
+      style          : { value: 'background-color: red;', expect: { _values: { 'background-color': 'red' } } },
       tabIndex       : { value: '1', expect: 1 },
       title          : { value: 'elem-title' },
     };
@@ -52,11 +51,13 @@ describe('chain with HTML div element', () => {
     // Expect
     keys.forEach(( key: string, index: number ) => {
       // The actual element has the value
-      expect(elem[key]).toEqual(attrs[key].expect || attrs[key].value);
+      if (typeof attrs[key].expect === 'object') {
+        expect(elem[key]).toEqual(expect.objectContaining(attrs[key].expect));
+      } else {
+        expect(elem[key]).toEqual(attrs[key].expect || attrs[key].value);
+      }
       // The value is also in the list of __values__
       expect(chained._getChainValueAt(index)).toEqual(attrs[key].value);
     });
-    done();
   });
-
 });

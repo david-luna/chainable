@@ -11,17 +11,24 @@ type AnyFunction = (...args: any[]) => any;
  * https://stackoverflow.com/questions/50773038/inferring-function-parameters-in-typescript
  * (see second answer)
  */
-type ChainObject<T> = {
-  [K in keyof T]?:  T[K] extends AnyFunction ? (...args: Parameters<T[K]>) => Chainable<T> :
-                    (val?: T[K]) => Chainable<T>;
+type ChainObject<SourceType> = {
+  [Key in keyof SourceType]?: SourceType[Key] extends AnyFunction ? (...args: Parameters<SourceType[Key]>) => Chainable<SourceType> :
+                            (val?: SourceType[Key]) => Chainable<SourceType>;
 };
 
 // To resolve array.reduce types
-type ReducerFunction<T,U> = (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U;
+type ReducerFunction<ItemType,AccumulatorType> = (
+  previousValue: AccumulatorType,
+  currentValue: ItemType,
+  currentIndex: number,
+  array: ItemType[]
+) => AccumulatorType;
+
+type AccessorMethod<ValueType, ReturnType = ValueType> = (val?: ValueType) => ChainArray<ReturnType>;
 
 type ChainArray<T> = {
-  [K in keyof Array<T>]?: K extends number ? (val?: T) => ChainArray<T> :
-                          K extends 'length' ? (length?: number) => ChainArray<T> :
+  [K in keyof Array<T>]?: K extends number ? AccessorMethod<T> :
+                          K extends 'length' ? AccessorMethod<number, T> :
                           K extends 'reduce' ? (reducer: ReducerFunction<T, any>, initialValue: any) => ChainArray<T> :
                           Array<T>[K] extends AnyFunction ? (...args: Parameters<Array<T>[K]>) => ChainArray<T>:
                           never;
@@ -29,9 +36,9 @@ type ChainArray<T> = {
 
 // Thanks to https://dev.to/aexol/typescript-tutorial-infer-keyword-2cn
 // I've got better idea of how to use infer :)
-type Chain<T> = T extends number ? ChainObject<Number> :
-                T extends boolean ? ChainObject<Boolean> :
-                T extends Array<infer K> ? ChainArray<K> : ChainObject<T>;
+type Chain<SourceType> = SourceType extends number ? ChainObject<Number> :
+                         SourceType extends boolean ? ChainObject<Boolean> :
+                         SourceType extends Array<infer ItemType> ? ChainArray<ItemType> : ChainObject<SourceType>;
 
 
 /**

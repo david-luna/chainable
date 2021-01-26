@@ -5,8 +5,7 @@ describe('chain with js types', () => {
   // The only types we're going to cover are Map, WeakMap and Sets
   
   describe('Array type', () => {
-
-    it('should work properly if we cast to any type', done => {
+    it('should work properly if we cast to any type', () => {
       // Prepare
       const rawValue     = [1,2,3,4,5];
       const chainedValue = chainable(rawValue);
@@ -31,15 +30,11 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainValueAt(7)).toEqual(8);
       expect(chainedValue._getChainValueAt(8)).toEqual([4,6,8,10,12,14,16,18]);
       expect(chainedValue._getChainValueAt(9)).toEqual(44);
-      
-      done();
     });
-
   });
 
   describe('Map type', () => {
-
-    it('should resolve all interface types properly with the primitive', done => {
+    it('should resolve all interface types properly with the primitive', () => {
       // Prepare
       const rawValue     = new Map();
       const chainedValue = chainable(rawValue);
@@ -65,14 +60,11 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainValueAt(7)).toEqual(2);
       expect(chainedValue._getChainValueAt(8)).toEqual(rawValue.keys());
       expect(chainedValue._getChainValueAt(9)).toEqual(rawValue.values());
-      done();
     });
-
   });
 
   describe('WeakMap type', () => {
-
-    it('should resolve all interface types properly with the primitive', done => {
+    it('should resolve all interface types properly with the primitive', () => {
       // Prepare
       const rawValue     = new WeakMap();
       const chainedValue = chainable(rawValue);
@@ -95,14 +87,11 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainValueAt(3)).toEqual('val1');
       expect(chainedValue._getChainValueAt(5)).toEqual(false);
       expect(chainedValue._getChainValueAt(6)).toEqual(true);
-      done();
     });
-
   });
 
   describe('Set type', () => {
-
-    it('should resolve all interface types properly with the primitive', done => {
+    it('should resolve all interface types properly with the primitive', () => {
       // Prepare
       const rawValue     = new Set(['val0']);
       const chainedValue = chainable(rawValue);
@@ -124,14 +113,12 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainValueAt(3)).toEqual(true);
       expect(chainedValue._getChainValueAt(5)).toEqual(false);
       expect(chainedValue._getChainValueAt(7)).toEqual(0);
-      done();
     });
 
   });
 
   describe('String type', () => {
-
-    it('should resolve all interface types properly with the primitive', done => {
+    it('should resolve all interface types properly with the primitive', () => {
       // Prepare
       const rawValue     = `I'm working with strings`;
       const chainedValue = chainable(rawValue);
@@ -149,14 +136,12 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainValueAt(1)).toEqual(`I'm working with stringsI'm working with strings`);
       expect(chainedValue._getChainValueAt(2)).toEqual(`I'm working with `);
       expect(chainedValue._getChainValueAt(3)).toEqual(`I'M WORKING WITH STRINGS`);
-      done();
     });
 
   });
 
   describe('Number type', () => {
-
-    it('should resolve all interface types properly with the primitive', done => {
+    it('should resolve all interface types properly with the primitive', () => {
       // Prepare
       const rawValue     = 300;
       const chainedValue = chainable(rawValue);
@@ -170,14 +155,12 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainReference()).toBe(rawValue);
       expect(chainedValue._getChainValueAt(0)).toEqual(`300.00`);
       expect(chainedValue._getChainValueAt(1)).toEqual(`3e+2`);
-      done();
     });
-
   });
 
   describe('Boolean type', () => {
 
-    it('should resolve all interface types properly with the primitive', done => {
+    it('should resolve all interface types properly with the primitive', () => {
       // Prepare
       const rawValue     = true;
       const chainedValue = chainable(rawValue);
@@ -191,9 +174,6 @@ describe('chain with js types', () => {
       expect(chainedValue._getChainReference()).toBe(rawValue);
       expect(chainedValue._getChainValueAt(0)).toEqual(true);
       expect(chainedValue._getChainValueAt(1)).toEqual(`true`);
-      done();
     });
-
   });
-
 });

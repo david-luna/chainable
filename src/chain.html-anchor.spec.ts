@@ -26,8 +26,8 @@ describe('chain with HTML Anchor element', () => {
     chained = null;
   });
 
-  it('should let change the attibutes of the element', done => {
-    // We're going to test core HTML attibutes specified in
+  it('should let change the attributes of the element', () => {
+    // We're going to test core HTML attributes specified in
     // https://www.w3.org/TR/2010/WD-html-markup-20100624/common-attributes.html
     const attrs: ValueExpectedMap = {
       href  : { value: 'http://www.google.com/' },
@@ -48,6 +48,5 @@ describe('chain with HTML Anchor element', () => {
       // The value is also in the list of __values__
       expect(chained._getChainValueAt(index)).toEqual(attrs[key].value);
     });
-    done();
   });
 });

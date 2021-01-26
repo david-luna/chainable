@@ -48,7 +48,7 @@ describe('chainable with class properties', () => {
 
   describe('class properties with strict mode ON', () => {
     
-    it('should fail for private or non initialised public properties', done => {
+    it('should fail for private or non initialized public properties', () => {
       // Execute
 
       // Expect
@@ -60,11 +60,11 @@ describe('chainable with class properties', () => {
       expect(() => (<any>chained).priBooleanProp).toThrowError(TypeError);
       expect(() => (<any>chained).priNumberProp).toThrowError(TypeError);
       expect(() => (<any>chained).priStringProp).toThrowError(TypeError);
-      done();
+      
     });
 
-    it('should work with public properties already set', done => {
-      // Preapare
+    it('should work with public properties already set', () => {
+      // Prepare
       const ifaceVal: PropsInterface = { bol: true, num: 1, str: 'test' };
       const classVal: PropClass = new PropClass();
       rawValue.pubBooleanProp = false;
@@ -72,6 +72,7 @@ describe('chainable with class properties', () => {
       rawValue.pubStringProp  = '';
       rawValue.pubIfaceProp   = ifaceVal;
       rawValue.pubClassProp   = classVal;
+      rawValue.pubAnyProp     = 0;
 
       // Execute
       chained
@@ -80,7 +81,7 @@ describe('chainable with class properties', () => {
       .pubStringProp('test')
       .pubIfaceProp(ifaceVal)
       .pubClassProp(classVal)
-      // .pubAnyProp({ val: 'test' })
+      .pubAnyProp({ val: 'test' })
 
       // Expect
       expect(rawValue.pubBooleanProp).toBe(true);
@@ -88,28 +89,25 @@ describe('chainable with class properties', () => {
       expect(rawValue.pubStringProp).toBe('test');
       expect(rawValue.pubIfaceProp).toBe(ifaceVal);
       expect(rawValue.pubClassProp).toBe(classVal);
-      // expect(rawValue.pubAnyProp).toEqual({ val: 'test' });
+      expect(rawValue.pubAnyProp).toEqual({ val: 'test' });
       expect(chained._getChainReference()).toBe(rawValue);
-      done();
     });
 
-    it('should fail for static properties', done => {
+    it('should fail for static properties', () => {
       // Execute
 
       // Expect
       expect(() => (<any>chained).staticStringProp).toThrowError(TypeError);
       expect(() => (<any>chained).staticNumberProp).toThrowError(TypeError);
       expect(() => (<any>chained).staticStringProp).toThrowError(TypeError);
-      done();
     });
     
-    it('should fail with properties which are not defined in the class', done => {
+    it('should fail with properties which are not defined in the class', () => {
       // Execute
 
       // Expect
       // Custom properties
       expect(() => (<any>chained).unknownProp).toThrowError(TypeError);
-      done();
     });
 
   });
@@ -123,7 +121,7 @@ describe('chainable with class properties', () => {
       chainable.prototype.strict = true;
     });
 
-    it('should succed for private or non initialised public properties', done => {
+    it('should succeed for private or non initialized public properties', () => {
       // Execute
 
       // Expect
@@ -135,27 +133,23 @@ describe('chainable with class properties', () => {
       expect(() => (<any>chained).priBooleanProp).not.toThrowError(TypeError);
       expect(() => (<any>chained).priNumberProp).not.toThrowError(TypeError);
       expect(() => (<any>chained).priStringProp).not.toThrowError(TypeError);
-      done();
     });
 
-    it('should work for static properties', done => {
+    it('should work for static properties', () => {
       // Execute
 
       // Expect
       expect(() => (<any>chained).staticStringProp).not.toThrowError(TypeError);
       expect(() => (<any>chained).staticNumberProp).not.toThrowError(TypeError);
       expect(() => (<any>chained).staticStringProp).not.toThrowError(TypeError);
-      done();
     });
     
-    it('should work with properties which are not defined in the class', done => {
+    it('should work with properties which are not defined in the class', () => {
       // Execute
 
       // Expect
       // Custom properties
       expect(() => (<any>chained).unknownProp).not.toThrowError(TypeError);
-      done();
     });
-
   });
 });

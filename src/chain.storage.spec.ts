@@ -8,14 +8,13 @@ describe('chain with Sync Storage (local & session)', () => {
     // Prepare
     let storage: Chainable<Storage> = chainable(localStorage);
     let data: {[attr: string]: string} = {
-      localkey1: 'value1',
-      localkey2: 'value2',
-      localkey3: 'value3',
-      localkey4: 'value4',
+      localKey1: 'value1',
+      localKey2: 'value2',
+      localKey3: 'value3',
+      localKey4: 'value4',
     };
 
-
-    it('should work with setItem', done => {
+    it('should work with setItem', () => {
       // Execute
       for ( let a in data ) {
         storage = storage.setItem(a, data[a]);
@@ -26,10 +25,9 @@ describe('chain with Sync Storage (local & session)', () => {
         expect(localStorage.getItem(a)).toBe(data[a]);
       }
       expect(storage._getChainReference()).toBe(localStorage);
-      done();
     });
 
-    it('should work with removeItem', done => {
+    it('should work with removeItem', () => {
       // Execute
       for ( let a in data ) {
         storage = storage.removeItem(a);
@@ -41,7 +39,6 @@ describe('chain with Sync Storage (local & session)', () => {
       }
       expect(localStorage.length).toEqual(0);
       expect(storage._getChainReference()).toBe(localStorage);
-      done();
     });
   });
 
@@ -49,13 +46,13 @@ describe('chain with Sync Storage (local & session)', () => {
     // Prepare
     let storage: Chainable<Storage> = chainable(sessionStorage);
     let data: {[attr: string]: string} = {
-      sessionkey1: 'value1',
-      sessionkey2: 'value2',
-      sessionkey3: 'value3',
-      sessionkey4: 'value4',
+      sessionKey1: 'value1',
+      sessionKey2: 'value2',
+      sessionKey3: 'value3',
+      sessionKey4: 'value4',
     };
     
-    it('should work with setItem', done => {
+    it('should work with setItem', () => {
       // Execute
       for ( let a in data ) {
         storage = storage.setItem(a, data[a]);
@@ -66,10 +63,9 @@ describe('chain with Sync Storage (local & session)', () => {
         expect(sessionStorage.getItem(a)).toBe(data[a]);
       }
       expect(storage._getChainReference()).toBe(sessionStorage);
-      done();
     });
 
-    it('should work with removeItem', done => {
+    it('should work with removeItem', () => {
       // Execute
       for ( let a in data ) {
         storage = storage.removeItem(a);
@@ -81,8 +77,6 @@ describe('chain with Sync Storage (local & session)', () => {
       }
       expect(sessionStorage.length).toEqual(0);
       expect(storage._getChainReference()).toBe(sessionStorage);
-      done();
     });
-
   });
 });

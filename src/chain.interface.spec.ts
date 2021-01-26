@@ -2,6 +2,7 @@ import { Chainable } from './types';
 import { chainable } from './chainable';
 
 interface RawTypes {
+  any?: any;
   str?: string;
   bol?: boolean;
   num?: number;
@@ -24,10 +25,6 @@ interface SuperType {
   concat?: (a: string, b: string) => string;
 }
 
-
-
-
-
 describe('chain with interfaces', () => {
 
   let raw: RawTypes;
@@ -35,12 +32,6 @@ describe('chain with interfaces', () => {
   let chainedRaw: Chainable<RawTypes>;
   let chainedSup : Chainable<SuperType>;
   
-  beforeEach(() => {
-    raw = {};
-    sup = {};
-    chainedRaw = chainable<RawTypes>(raw);
-    chainedSup = chainable<SuperType>(sup);
-  });
   afterEach(() => {
     raw = null;
     sup = null;
@@ -48,12 +39,11 @@ describe('chain with interfaces', () => {
     chainedSup = null;
   });
 
-
   describe('interface properties', () => {
-
-    it('should resolve all interface types properly', done => {
+    it('should resolve all interface types properly', () => {
       // Prepare
       raw = {
+        any   : undefined,
         str   : undefined,
         strArr: undefined,
         strObj: undefined,
@@ -70,10 +60,11 @@ describe('chain with interfaces', () => {
         numMap: undefined,
         numSet: undefined,
       };
-      chainedRaw = chainable<RawTypes>(raw);
+      chainedRaw = chainable(raw);
 
       // Execute
       chainedRaw
+      .any(2)
       .str('one')
       .strArr(['one', 'two', 'three'])
       .strObj({ 1: 'one', 2: 'two', 3: 'three'})
@@ -92,6 +83,7 @@ describe('chain with interfaces', () => {
 
       // Expect
       expect(raw).toEqual({
+        any   : 2,
         str   : 'one',
         strArr: ['one', 'two', 'three'],
         strObj: { 1: 'one', 2: 'two', 3: 'three'},
@@ -108,13 +100,40 @@ describe('chain with interfaces', () => {
         numMap: new Map([['0', 0],['1', 1],['2', 2]]),
         numSet: new Set([0,1,2]),
       });
-      done();
     });
 
-    it('should resolve throw if some property is missing/not initialized', done => {
+    it('should resolve all interface types properly', () => {
+      // Prepare
+      sup = {
+        raw: {},
+        concat: (a, b) => `${a} + ${b}`
+      };
+      chainedSup = chainable(sup);
+
+      // Execute
+      chainedSup
+      .raw({
+        any: 2,
+        str: 'one',
+        bol: true,
+        num: 0,
+      })
+      .concat('1', '2');
+
+      // Expect
+      expect(chainedSup._getChainReference().raw).toEqual({
+        any: 2,
+        str: 'one',
+        bol: true,
+        num: 0,
+      });
+
+      expect(chainedSup._getChainValueAt(1)).toEqual('1 + 2');
+    });
+
+    it('should throw if some property is missing/not initialized', () => {
       // Expect
       expect(() => chainedRaw.str('one')).toThrowError(TypeError);
-      done();
     });
   });
 });
