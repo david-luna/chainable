@@ -14,6 +14,13 @@ class GetSetClass {
 }
 
 class TestGetSetClass {
+  private _anyProp : any;
+  get anyProp() : any {
+    return this._anyProp;
+  }
+  set anyProp(v : any) {
+    this._anyProp = v;
+  }
   private _strProp : string;
   get strProp() : string {
     return this._strProp;
@@ -58,7 +65,7 @@ describe('chainable with class properties', () => {
 
   beforeEach(() => {
     rawValue = new TestGetSetClass();
-    chained  = chainable<TestGetSetClass>(rawValue);
+    chained  = chainable(rawValue);
   });
   afterEach(() => {
     rawValue = null;
@@ -68,13 +75,15 @@ describe('chainable with class properties', () => {
 
   describe('class getters/setters with strict mode ON', () => {
 
-    it('should work with setter functions', done => {
-      // Preapare
+    it('should work with setter functions', () => {
+      // Prepare
       const ifaceVal: GetSetInterface = { bol: true, num: 1, str: 'test' };
       const classVal: GetSetClass = new GetSetClass();
+      const anyObject = { anyKey: 'anyValue' };
 
       // Execute
       chained
+      .anyProp(anyObject)
       .boolProp(true)
       .numProp(1)
       .strProp('test')
@@ -82,15 +91,13 @@ describe('chainable with class properties', () => {
       .classProp(classVal)
 
       // Expect
+      expect(rawValue.anyProp).toBe(anyObject);
       expect(rawValue.boolProp).toBe(true);
       expect(rawValue.numProp).toBe(1);
       expect(rawValue.strProp).toBe('test');
       expect(rawValue.ifaceProp).toBe(ifaceVal);
       expect(rawValue.classProp).toBe(classVal);
       expect(chained._getChainReference()).toBe(rawValue);
-      done();
     });
-
   });
-  
 });
