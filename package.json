@@ -20,8 +20,11 @@
     "utils"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.prod.json",
+    "build": "npm run types:set && tsc -p tsconfig.prod.json && npm run types:reset && npm run types:copy",
     "test": "jest",
+    "types:set": "cd src && mv types.ts types.d.ts",
+    "types:reset": "cd src && mv types.d.ts types.ts",
+    "types:copy": "cp ./src/types.ts ./lib/types.d.ts",
     "clean": "rm -rf coverage && rm -rf lib",
     "lcov": "cat coverage/lcov.info | coveralls"
   },
