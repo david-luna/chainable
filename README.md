@@ -124,6 +124,11 @@ chainable.prototype.strict = true;
 
 ## Release notes
 
+### [0.4.2]
+
+* Reduced bundle size
+
+
 ### [0.4.1]
 
 * Support for properties with type `any`
